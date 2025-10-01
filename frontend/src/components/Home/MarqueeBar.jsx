@@ -1,6 +1,6 @@
 const MarqueeBar = () => {
   return (
-    <div className="bg-gradient-to-r from-blue-900 to-blue-400 text-white py-3 overflow-hidden w-full">
+    <div className="bg-gradient-to-r from-red-900 to-yellow-500 text-white py-3 overflow-hidden w-full">
       <div
         className="inline-flex whitespace-nowrap"
         style={{

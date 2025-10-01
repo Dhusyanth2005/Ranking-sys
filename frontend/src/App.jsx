@@ -4,7 +4,7 @@ import Home from './Pages/HomePage';
 import About from './Pages/About';
 import AuthPage from './Pages/AuthPage';
 import PlaceholderPage from './Pages/PlacholderPage';
-
+import SubmissionForm from './Pages/SubmissionForm';
 const App = () => {
   return (
     <Router>
@@ -13,7 +13,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/leaderboard" element={<PlaceholderPage route="leaderboard" />} />
-          <Route path="/submission" element={<PlaceholderPage route="submission" />} />
+          <Route path="/submission" element={<SubmissionForm />} />
           <Route path="/faqs" element={<PlaceholderPage route="faqs" />} />
           <Route path="/contact" element={<PlaceholderPage route="contact" />} />
         </Route>
