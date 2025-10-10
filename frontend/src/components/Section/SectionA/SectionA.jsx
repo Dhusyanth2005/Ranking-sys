@@ -1,42 +1,13 @@
+import { useState } from "react";
+import { ChevronRight } from "lucide-react";
 
-import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-
-const SectionA = ({ formData, setFormData, onNext, onBack }) => {
+const SectionA = ({ formData, setFormData, onNext }) => {
   const [loading, setLoading] = useState(false);
   const [submissionId, setSubmissionId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  // Simulated API calls for demo
-  useEffect(() => {
-    const fetchSectionA = async () => {
-      try {
-        setLoading(true);
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        // Simulate no existing data
-        console.log("No existing data found");
-      } catch (error) {
-        console.log("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSectionA();
-  }, []);
-
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleCheckboxChange = (field, value, checked) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: checked
-        ? [...prev[field], value]
-        : prev[field].filter((item) => item !== value),
-    }));
   };
 
   const handleSubmit = async (e) => {
@@ -51,8 +22,8 @@ const SectionA = ({ formData, setFormData, onNext, onBack }) => {
       state: formData.state,
       instituteWebsite: formData.website,
       headOfInstitution: formData.headName,
-      instituteType: formData.instituteType,
-      instituteCategory: formData.instituteCategory,
+      instituteType: formData.instituteType === "Others" ? formData.instituteTypeOther || "Others" : formData.instituteType,
+      instituteCategory: formData.instituteCategory === "Others" ? formData.instituteCategoryOther || "Others" : formData.instituteCategory,
       affiliatedUniversity: formData.affiliatedUniversity,
       aicteApproval: formData.aicteApproval,
       nbaAccredited: formData.nbaAccredited,
@@ -90,51 +61,6 @@ const SectionA = ({ formData, setFormData, onNext, onBack }) => {
     }
   };
 
-  const handleDelete = async () => {
-    if (!submissionId) {
-      alert("No submission to delete");
-      return;
-    }
-
-    try {
-      setLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setFormData({
-        institutionName: "",
-        yearEstablished: "",
-        address: "",
-        pinCode: "",
-        state: "",
-        website: "",
-        headName: "",
-        instituteType: [],
-        instituteCategory: [],
-        affiliatedUniversity: "",
-        aicteApproval: "",
-        nbaAccredited: "",
-        nbaValidityDate: "",
-        naacAccredited: "",
-        naacScore: "",
-        naacValidityDate: "",
-        otherAccreditation: "",
-        applicantName: "",
-        applicantDesignation: "",
-        applicantContact: "",
-        applicantEmail: "",
-        driveLink: "",
-      });
-      setSubmissionId(null);
-      setIsEditing(false);
-      alert("Section A deleted successfully");
-    } catch (error) {
-      alert("Failed to delete Section A");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleNext = () => {
     // Validate required fields before proceeding
     const requiredFields = [
@@ -145,12 +71,29 @@ const SectionA = ({ formData, setFormData, onNext, onBack }) => {
       'applicantName', 
       'applicantDesignation', 
       'applicantContact', 
-      'applicantEmail'
+      'applicantEmail',
+      'instituteType',
+      'instituteCategory',
     ];
     
-    const missingFields = requiredFields.filter(field => !formData[field]);
+    // Additional validation for "Others"
+    const additionalFields = [];
+    if (formData.instituteType === "Others" && !formData.instituteTypeOther) {
+      additionalFields.push("instituteTypeOther");
+    }
+    if (formData.instituteCategory === "Others" && !formData.instituteCategoryOther) {
+      additionalFields.push("instituteCategoryOther");
+    }
+
+    const missingFields = [
+      ...requiredFields.filter(field => !formData[field]),
+      ...additionalFields,
+    ];
     
-    
+    // if (missingFields.length > 0) {
+    //   alert(`Please fill in the following required fields: ${missingFields.join(", ")}`);
+    //   return;
+    // }
     
     if (onNext) {
       onNext();
@@ -316,62 +259,60 @@ const SectionA = ({ formData, setFormData, onNext, onBack }) => {
               <div>
                 <label className="block text-lg font-semibold text-gray-900 mb-4">Institute Type</label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {["Government", "Private aided", "Private un-aided"].map((type) => (
+                  {["Government", "Private aided", "Private un-aided", "Others"].map((type) => (
                     <div key={type} className="flex items-center space-x-3">
                       <input
-                        type="checkbox"
+                        type="radio"
                         id={`type-${type}`}
-                        checked={formData.instituteType?.includes(type) || false}
-                        onChange={(e) => handleCheckboxChange("instituteType", type, e.target.checked)}
-                        className="w-5 h-5 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
+                        name="instituteType"
+                        value={type}
+                        checked={formData.instituteType === type}
+                        onChange={(e) => handleInputChange("instituteType", e.target.value)}
+                        className="w-5 h-5 text-teal-600 border-gray-300 focus:ring-teal-500"
                       />
                       <label htmlFor={`type-${type}`} className="text-gray-900 font-medium cursor-pointer">
                         {type}
                       </label>
+                      {type === "Others" && formData.instituteType === "Others" && (
+                        <input
+                          type="text"
+                          placeholder="Specify other type"
+                          value={formData.instituteTypeOther || ""}
+                          onChange={(e) => handleInputChange("instituteTypeOther", e.target.value)}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                        />
+                      )}
                     </div>
                   ))}
-                  <div className="flex items-center space-x-3">
-                    <input
-                      type="checkbox"
-                      id="type-others"
-                      checked={formData.instituteType?.includes("Others") || false}
-                      onChange={(e) => handleCheckboxChange("instituteType", "Others", e.target.checked)}
-                      className="w-5 h-5 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
-                    />
-                    <label htmlFor="type-others" className="text-gray-900 font-medium cursor-pointer">
-                      Others (please specify):
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Specify other type"
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                      onChange={(e) =>
-                        handleInputChange("instituteType", [
-                          ...(formData.instituteType?.filter((t) => t !== "Others") || []),
-                          e.target.value || "Others",
-                        ])
-                      }
-                      disabled={!formData.instituteType?.includes("Others")}
-                    />
-                  </div>
                 </div>
               </div>
 
               <div className="border-t border-gray-200 pt-8">
                 <label className="block text-lg font-semibold text-gray-900 mb-4">Institute Category</label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {["Central University", "State University", "Deemed to be University"].map((category) => (
+                  {["Central University", "State University", "Deemed to be University", "Others"].map((category) => (
                     <div key={category} className="flex items-center space-x-3">
                       <input
-                        type="checkbox"
+                        type="radio"
                         id={`category-${category}`}
-                        checked={formData.instituteCategory?.includes(category) || false}
-                        onChange={(e) => handleCheckboxChange("instituteCategory", category, e.target.checked)}
-                        className="w-5 h-5 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
+                        name="instituteCategory"
+                        value={category}
+                        checked={formData.instituteCategory === category}
+                        onChange={(e) => handleInputChange("instituteCategory", e.target.value)}
+                        className="w-5 h-5 text-teal-600 border-gray-300 focus:ring-teal-500"
                       />
                       <label htmlFor={`category-${category}`} className="text-gray-900 font-medium cursor-pointer">
                         {category}
                       </label>
+                      {category === "Others" && formData.instituteCategory === "Others" && (
+                        <input
+                          type="text"
+                          placeholder="Specify other category"
+                          value={formData.instituteCategoryOther || ""}
+                          onChange={(e) => handleInputChange("instituteCategoryOther", e.target.value)}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                        />
+                      )}
                     </div>
                   ))}
                 </div>
@@ -604,8 +545,6 @@ const SectionA = ({ formData, setFormData, onNext, onBack }) => {
 
           {/* Navigation Section */}
           <div className="flex justify-between items-center pt-8">
-            {/* Back Button no need for A) */}
-            
             {/* Submit/Save and Next buttons */}
             <div className="flex space-x-4 ml-auto">
               <button
@@ -635,29 +574,7 @@ const SectionA = ({ formData, setFormData, onNext, onBack }) => {
               )}
             </div>
           </div>
-
-          {/* Delete button (only show if editing) */}
-          {isEditing && (
-            <div className="flex justify-center pt-4">
-              <button
-                type="button"
-                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                onClick={handleDelete}
-                disabled={loading}
-              >
-                {loading ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    Deleting...
-                  </div>
-                ) : (
-                  "Delete Application"
-                )}
-              </button>
-            </div>
-          )}
         </form>
-
         {/* Footer */}
         <div className="text-center mt-12 pt-8 border-t border-teal-200">
           <p className="text-gray-600">
@@ -671,4 +588,5 @@ const SectionA = ({ formData, setFormData, onNext, onBack }) => {
     </div>
   );
 };
+
 export default SectionA;

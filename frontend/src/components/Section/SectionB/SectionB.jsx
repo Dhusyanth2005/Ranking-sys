@@ -1,14 +1,85 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
   const [loading, setLoading] = useState(false);
+  const [genderData, setGenderData] = useState({
+    male: { '25-26': '', '24-25': '', '23-24': '' },
+    female: { '25-26': '', '24-25': '', '23-24': '' },
+    transgender: { '25-26': '', '24-25': '', '23-24': '' },
+  });
+  const [diversityData, setDiversityData] = useState({
+    interstate: { '25-26': '', '24-25': '', '23-24': '' },
+    intrastate: { '25-26': '', '24-25': '', '23-24': '' },
+    overseas: { '25-26': '', '24-25': '', '23-24': '' },
+  });
+  const [examRows, setExamRows] = useState([
+    { id: 1, department: '', examName: '', highestRank: '', lowestRank: '' },
+    { id: 2, department: '', examName: '', highestRank: '', lowestRank: '' },
+    { id: 3, department: '', examName: '', highestRank: '', lowestRank: '' },
+    { id: 4, department: '', examName: '', highestRank: '', lowestRank: '' },
+    { id: 5, department: '', examName: '', highestRank: '', lowestRank: '' },
+  ]);
+
+  // Calculate totals for Gender and Diversity
+  const calculateTotals = (data) => {
+    const totals = { '25-26': 0, '24-25': 0, '23-24': 0 };
+    Object.values(data).forEach(category => {
+      Object.keys(category).forEach(year => {
+        totals[year] += Number(category[year]) || 0;
+      });
+    });
+    return totals;
+  };
+
+  const genderTotals = calculateTotals(genderData);
+  const diversityTotals = calculateTotals(diversityData);
+
+  // Handle input changes
+  const handleGenderChange = (gender, year, value) => {
+    setGenderData(prev => ({
+      ...prev,
+      [gender]: { ...prev[gender], [year]: value }
+    }));
+  };
+
+  const handleDiversityChange = (category, year, value) => {
+    setDiversityData(prev => ({
+      ...prev,
+      [category]: { ...prev[category], [year]: value }
+    }));
+  };
+
+  const handleExamChange = (id, field, value) => {
+    setExamRows(prev =>
+      prev.map(row =>
+        row.id === id ? { ...row, [field]: value } : row
+      )
+    );
+  };
+
+  // Add new row to Exam Scores table
+  const addExamRow = () => {
+    const newId = Math.max(...examRows.map(row => row.id), 0) + 1;
+    setExamRows(prev => [
+      ...prev,
+      { id: newId, department: '', examName: '', highestRank: '', lowestRank: '' }
+    ]);
+  };
+
+  // Update formData when any input changes
+  useEffect(() => {
+    setFormData({
+      ...formData,
+      gender: genderData,
+      diversity: diversityData,
+      examScores: examRows,
+    });
+  }, [genderData, diversityData, examRows, setFormData]);
 
   const handleSubmit = async () => {
     setLoading(true);
-    
     try {
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
       alert("Section B submitted successfully");
     } catch (error) {
@@ -33,7 +104,6 @@ const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 to-cyan-50 py-12 px-4">
       <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-600 to-teal-700 rounded-full mb-6 shadow-lg">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,7 +126,6 @@ const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
         )}
 
         <div className="space-y-8">
-          {/* Gender Information Card */}
           <div className="bg-white rounded-2xl shadow-xl border border-teal-100 overflow-hidden">
             <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-8 py-6">
               <h2 className="text-2xl font-bold text-white mb-2">Gender Information</h2>
@@ -74,104 +143,34 @@ const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-6 font-medium text-gray-900">Male</td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                    </tr>
-                    <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-6 font-medium text-gray-900">Female</td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                    </tr>
-                    <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-6 font-medium text-gray-900">Transgender</td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                    </tr>
+                    {['male', 'female', 'transgender'].map(gender => (
+                      <tr key={gender} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                        <td className="py-4 px-6 font-medium text-gray-900 capitalize">{gender}</td>
+                        {['25-26', '24-25', '23-24'].map(year => (
+                          <td key={year} className="py-4 px-6">
+                            <input
+                              type="number"
+                              value={genderData[gender][year]}
+                              onChange={(e) => handleGenderChange(gender, year, e.target.value)}
+                              placeholder="Enter count"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                            />
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
                     <tr className="border-b-2 border-gray-300 bg-teal-50">
                       <td className="py-4 px-6 font-bold text-gray-900">Total</td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Auto-calculated" 
-                          disabled 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
-                        />
-                      </td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Auto-calculated" 
-                          disabled 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
-                        />
-                      </td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Auto-calculated" 
-                          disabled 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
-                        />
-                      </td>
+                      {['25-26', '24-25', '23-24'].map(year => (
+                        <td key={year} className="py-4 px-6">
+                          <input
+                            type="number"
+                            value={genderTotals[year]}
+                            disabled
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                          />
+                        </td>
+                      ))}
                     </tr>
                   </tbody>
                 </table>
@@ -179,7 +178,6 @@ const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
             </div>
           </div>
 
-          {/* Diversity Information Card */}
           <div className="bg-white rounded-2xl shadow-xl border border-teal-100 overflow-hidden">
             <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-8 py-6">
               <h2 className="text-2xl font-bold text-white mb-2">Diversity Information</h2>
@@ -202,104 +200,34 @@ const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-6 font-medium text-gray-900">Inter state</td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                    </tr>
-                    <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-6 font-medium text-gray-900">Intra-state</td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                    </tr>
-                    <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-6 font-medium text-gray-900">Overseas</td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Enter count" 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                        />
-                      </td>
-                    </tr>
+                    {['interstate', 'intrastate', 'overseas'].map(category => (
+                      <tr key={category} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                        <td className="py-4 px-6 font-medium text-gray-900 capitalize">{category.replace('state', ' state')}</td>
+                        {['25-26', '24-25', '23-24'].map(year => (
+                          <td key={year} className="py-4 px-6">
+                            <input
+                              type="number"
+                              value={diversityData[category][year]}
+                              onChange={(e) => handleDiversityChange(category, year, e.target.value)}
+                              placeholder="Enter count"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                            />
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
                     <tr className="border-b-2 border-gray-300 bg-teal-50">
                       <td className="py-4 px-6 font-bold text-gray-900">Total</td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Auto-calculated" 
-                          disabled 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
-                        />
-                      </td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Auto-calculated" 
-                          disabled 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
-                        />
-                      </td>
-                      <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Auto-calculated" 
-                          disabled 
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
-                        />
-                      </td>
+                      {['25-26', '24-25', '23-24'].map(year => (
+                        <td key={year} className="py-4 px-6">
+                          <input
+                            type="number"
+                            value={diversityTotals[year]}
+                            disabled
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                          />
+                        </td>
+                      ))}
                     </tr>
                   </tbody>
                 </table>
@@ -307,7 +235,6 @@ const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
             </div>
           </div>
 
-          {/* Exam Scores and Rank Details Card */}
           <div className="bg-white rounded-2xl shadow-xl border border-teal-100 overflow-hidden">
             <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-8 py-6">
               <h2 className="text-2xl font-bold text-white mb-2">Exam Scores and Rank Details</h2>
@@ -326,34 +253,42 @@ const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {[1, 2, 3, 4, 5].map((num) => (
-                      <tr key={num} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                        <td className="py-4 px-4 text-center font-medium text-gray-900">{num}</td>
+                    {examRows.map(row => (
+                      <tr key={row.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                        <td className="py-4 px-4 text-center font-medium text-gray-900">{row.id}</td>
                         <td className="py-4 px-6">
-                          <input 
-                            type="text" 
-                            placeholder="Enter department" 
+                          <input
+                            type="text"
+                            value={row.department}
+                            onChange={(e) => handleExamChange(row.id, 'department', e.target.value)}
+                            placeholder="Enter department"
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                           />
                         </td>
                         <td className="py-4 px-6">
-                          <input 
-                            type="text" 
-                            placeholder="Enter exam name" 
+                          <input
+                            type="text"
+                            value={row.examName}
+                            onChange={(e) => handleExamChange(row.id, 'examName', e.target.value)}
+                            placeholder="Enter exam name"
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                           />
                         </td>
                         <td className="py-4 px-4">
-                          <input 
-                            type="number" 
-                            placeholder="Enter rank" 
+                          <input
+                            type="number"
+                            value={row.highestRank}
+                            onChange={(e) => handleExamChange(row.id, 'highestRank', e.target.value)}
+                            placeholder="Enter rank"
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                           />
                         </td>
                         <td className="py-4 px-4">
-                          <input 
-                            type="number" 
-                            placeholder="Enter rank" 
+                          <input
+                            type="number"
+                            value={row.lowestRank}
+                            onChange={(e) => handleExamChange(row.id, 'lowestRank', e.target.value)}
+                            placeholder="Enter rank"
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                           />
                         </td>
@@ -362,9 +297,10 @@ const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
                   </tbody>
                 </table>
                 <div className="mt-4 text-center">
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     className="text-teal-600 hover:text-teal-700 font-medium transition-colors"
+                    onClick={addExamRow}
                   >
                     + Add more rows
                   </button>
@@ -373,7 +309,6 @@ const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
             </div>
           </div>
 
-          {/* Financial Details Card */}
           <div className="bg-white rounded-2xl shadow-xl border border-teal-100 overflow-hidden">
             <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-8 py-6">
               <h2 className="text-2xl font-bold text-white mb-2">Financial Details for Last Academic Year</h2>
@@ -385,9 +320,9 @@ const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
                   <label className="block text-sm font-semibold text-gray-900 mb-2">
                     Average tuition fees collected from the student per year
                   </label>
-                  <input 
-                    type="number" 
-                    placeholder="Enter amount in ₹" 
+                  <input
+                    type="number"
+                    placeholder="Enter amount in ₹"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                   />
                 </div>
@@ -395,22 +330,21 @@ const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
                   <label className="block text-sm font-semibold text-gray-900 mb-2">
                     Other fees collected per year
                   </label>
-                  <input 
-                    type="number" 
-                    placeholder="Enter amount in ₹" 
+                  <input
+                    type="number"
+                    placeholder="Enter amount in ₹"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                   />
                 </div>
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-2">
                     Hostel fees per year
                   </label>
-                  <input 
-                    type="number" 
-                    placeholder="Enter amount in ₹" 
+                  <input
+                    type="number"
+                    placeholder="Enter amount in ₹"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                   />
                 </div>
@@ -418,22 +352,21 @@ const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
                   <label className="block text-sm font-semibold text-gray-900 mb-2">
                     Total expenses (salary/remuneration) for teaching, non-teaching, staff salary
                   </label>
-                  <input 
-                    type="number" 
-                    placeholder="Enter amount in ₹" 
+                  <input
+                    type="number"
+                    placeholder="Enter amount in ₹"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                   />
                 </div>
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-2">
                     Total expenses on labs (all laboratories)
                   </label>
-                  <input 
-                    type="number" 
-                    placeholder="Enter amount in ₹" 
+                  <input
+                    type="number"
+                    placeholder="Enter amount in ₹"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                   />
                 </div>
@@ -441,9 +374,9 @@ const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
                   <label className="block text-sm font-semibold text-gray-900 mb-2">
                     Per student expenditure
                   </label>
-                  <input 
-                    type="number" 
-                    placeholder="Enter amount in ₹" 
+                  <input
+                    type="number"
+                    placeholder="Enter amount in ₹"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                   />
                 </div>
@@ -451,9 +384,7 @@ const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
             </div>
           </div>
 
-          {/* Navigation Section */}
           <div className="flex justify-between items-center pt-8">
-            {/* Back Button */}
             {onBack && (
               <button
                 type="button"
@@ -464,8 +395,6 @@ const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
                 Back to Section A
               </button>
             )}
-            
-            {/* Submit/Save and Next buttons */}
             <div className="flex space-x-4 ml-auto">
               <button
                 type="button"
@@ -482,7 +411,6 @@ const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
                   "Save Section B"
                 )}
               </button>
-
               {onNext && (
                 <button
                   type="button"
@@ -495,16 +423,15 @@ const SectionB = ({ formData = {}, setFormData, onNext, onBack }) => {
               )}
             </div>
           </div>
-        </div>
 
-        {/* Footer */}
-        <div className="text-center mt-12 pt-8 border-t border-teal-200">
-          <p className="text-gray-600">
-            Need help? Contact our support team at{" "}
-            <a href="mailto:support@institution.edu" className="text-teal-600 hover:text-teal-700 font-medium">
-              support@institution.edu
-            </a>
-          </p>
+          <div className="text-center mt-12 pt-8 border-t border-teal-200">
+            <p className="text-gray-600">
+              Need help? Contact our support team at{" "}
+              <a href="mailto:support@institution.edu" className="text-teal-600 hover:text-teal-700 font-medium">
+                support@institution.edu
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>

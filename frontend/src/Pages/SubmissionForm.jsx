@@ -145,7 +145,7 @@ const StepperForm = () => {
           align-items: flex-start;
           padding: 2rem;
           overflow-x: auto;
-          margin-bottom: 2rem;
+          margin-bottom: 0;
         }
 
         .stepper-wrapper {

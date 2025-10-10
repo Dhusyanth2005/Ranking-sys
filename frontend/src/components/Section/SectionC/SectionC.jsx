@@ -1,14 +1,217 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
   const [loading, setLoading] = useState(false);
+  const [specializationData, setSpecializationData] = useState([
+    { id: 1, department: '', '25-26': { intake: '', filled: '' }, '24-25': { intake: '', filled: '' }, '23-24': { intake: '', filled: '' } },
+    { id: 2, department: '', '25-26': { intake: '', filled: '' }, '24-25': { intake: '', filled: '' }, '23-24': { intake: '', filled: '' } },
+    { id: 3, department: '', '25-26': { intake: '', filled: '' }, '24-25': { intake: '', filled: '' }, '23-24': { intake: '', filled: '' } },
+    { id: 4, department: '', '25-26': { intake: '', filled: '' }, '24-25': { intake: '', filled: '' }, '23-24': { intake: '', filled: '' } },
+    { id: 5, department: '', '25-26': { intake: '', filled: '' }, '24-25': { intake: '', filled: '' }, '23-24': { intake: '', filled: '' } },
+  ]);
+  const [facultyData, setFacultyData] = useState([
+    { id: 1, department: '', intake: '', '25-26': { prof: '', asp: '', ap: '' }, '24-25': { prof: '', asp: '', ap: '' }, '23-24': { prof: '', asp: '', ap: '' } },
+    { id: 2, department: '', intake: '', '25-26': { prof: '', asp: '', ap: '' }, '24-25': { prof: '', asp: '', ap: '' }, '23-24': { prof: '', asp: '', ap: '' } },
+    { id: 3, department: '', intake: '', '25-26': { prof: '', asp: '', ap: '' }, '24-25': { prof: '', asp: '', ap: '' }, '23-24': { prof: '', asp: '', ap: '' } },
+    { id: 4, department: '', intake: '', '25-26': { prof: '', asp: '', ap: '' }, '24-25': { prof: '', asp: '', ap: '' }, '23-24': { prof: '', asp: '', ap: '' } },
+  ]);
+  const [phdData, setPhdData] = useState({
+    '25-26': { total: '', phd: '' },
+    '24-25': { total: '', phd: '' },
+    '23-24': { total: '', phd: '' },
+  });
+  const [placementData, setPlacementData] = useState([
+    { id: 1, department: '', '25-26': { a: '', b: '', c: '' }, '24-25': { a: '', b: '', c: '' }, '23-24': { a: '', b: '', c: '' } },
+    { id: 2, department: '', '25-26': { a: '', b: '', c: '' }, '24-25': { a: '', b: '', c: '' }, '23-24': { a: '', b: '', c: '' } },
+    { id: 3, department: '', '25-26': { a: '', b: '', c: '' }, '24-25': { a: '', b: '', c: '' }, '23-24': { a: '', b: '', c: '' } },
+    { id: 4, department: '', '25-26': { a: '', b: '', c: '' }, '24-25': { a: '', b: '', c: '' }, '23-24': { a: '', b: '', c: '' } },
+    { id: 5, department: '', '25-26': { a: '', b: '', c: '' }, '24-25': { a: '', b: '', c: '' }, '23-24': { a: '', b: '', c: '' } },
+  ]);
+  const [placementSummaryData, setPlacementSummaryData] = useState([
+    { id: 1, department: '', '25-26': { n: '', x: '' }, '24-25': { n: '', x: '' }, '23-24': { n: '', x: '' } },
+    { id: 2, department: '', '25-26': { n: '', x: '' }, '24-25': { n: '', x: '' }, '23-24': { n: '', x: '' } },
+    { id: 3, department: '', '25-26': { n: '', x: '' }, '24-25': { n: '', x: '' }, '23-24': { n: '', x: '' } },
+    { id: 4, department: '', '25-26': { n: '', x: '' }, '24-25': { n: '', x: '' }, '23-24': { n: '', x: '' } },
+    { id: 5, department: '', '25-26': { n: '', x: '' }, '24-25': { n: '', x: '' }, '23-24': { n: '', x: '' } },
+  ]);
+  const [mouData, setMouData] = useState({
+    '24-25': '', '23-24': '', '22-23': '',
+  });
+  const [foreignMouData, setForeignMouData] = useState([
+    { id: 1, university: '', country: '', validUpto: '' },
+    { id: 2, university: '', country: '', validUpto: '' },
+    { id: 3, university: '', country: '', validUpto: '' },
+  ]);
+
+  // Calculate percentages for Specialization
+  const calculateSpecializationPercent = (intake, filled) => {
+    const intakeNum = Number(intake);
+    const filledNum = Number(filled);
+    return intakeNum > 0 ? ((filledNum / intakeNum) * 100).toFixed(2) : '';
+  };
+
+  // Calculate totals for Faculty
+  const calculateFacultyTotals = () => {
+    const totals = {
+      '25-26': { prof: 0, asp: 0, ap: 0 },
+      '24-25': { prof: 0, asp: 0, ap: 0 },
+      '23-24': { prof: 0, asp: 0, ap: 0 },
+    };
+    facultyData.forEach(row => {
+      ['25-26', '24-25', '23-24'].forEach(year => {
+        totals[year].prof += Number(row[year].prof) || 0;
+        totals[year].asp += Number(row[year].asp) || 0;
+        totals[year].ap += Number(row[year].ap) || 0;
+      });
+    });
+    return totals;
+  };
+
+  // Calculate Ph.D. percentages
+  const calculatePhdPercent = (total, phd) => {
+    const totalNum = Number(total);
+    const phdNum = Number(phd);
+    return totalNum > 0 ? ((phdNum / totalNum) * 100).toFixed(2) : '';
+  };
+
+  // Calculate Placement totals
+  const calculatePlacementTotals = (row, year) => {
+    const a = Number(row[year].a) || 0;
+    const b = Number(row[year].b) || 0;
+    const c = Number(row[year].c) || 0;
+    return a + b + c;
+  };
+
+  // Calculate Placement Summary percentages
+  const calculateSummaryPercent = (n, x) => {
+    const nNum = Number(n);
+    const xNum = Number(x);
+    return nNum > 0 ? ((xNum / nNum) * 100).toFixed(2) : '';
+  };
+
+  // Calculate MoUs total
+  const calculateMouTotal = () => {
+    return Object.values(mouData).reduce((sum, val) => sum + (Number(val) || 0), 0);
+  };
+
+  const facultyTotals = calculateFacultyTotals();
+  const mouTotal = calculateMouTotal();
+
+  // Handlers for input changes
+  const handleSpecializationChange = (id, field, year, value) => {
+    setSpecializationData(prev =>
+      prev.map(row =>
+        row.id === id ? { ...row, [year]: { ...row[year], [field]: value } } : row
+      )
+    );
+  };
+
+  const handleFacultyChange = (id, field, year, value) => {
+    setFacultyData(prev =>
+      prev.map(row =>
+        row.id === id
+          ? field === 'department' || field === 'intake'
+            ? { ...row, [field]: value }
+            : { ...row, [year]: { ...row[year], [field]: value } }
+          : row
+      )
+    );
+  };
+
+  const handlePhdChange = (year, field, value) => {
+    setPhdData(prev => ({
+      ...prev,
+      [year]: { ...prev[year], [field]: value },
+    }));
+  };
+
+  const handlePlacementChange = (id, field, year, value) => {
+    setPlacementData(prev =>
+      prev.map(row =>
+        row.id === id ? { ...row, [year]: { ...row[year], [field]: value } } : row
+      )
+    );
+  };
+
+  const handleSummaryChange = (id, field, year, value) => {
+    setPlacementSummaryData(prev =>
+      prev.map(row =>
+        row.id === id ? { ...row, [year]: { ...row[year], [field]: value } } : row
+      )
+    );
+  };
+
+  const handleMouChange = (year, value) => {
+    setMouData(prev => ({ ...prev, [year]: value }));
+  };
+
+  const handleForeignMouChange = (id, field, value) => {
+    setForeignMouData(prev =>
+      prev.map(row =>
+        row.id === id ? { ...row, [field]: value } : row
+      )
+    );
+  };
+
+  // Add row handlers
+  const addSpecializationRow = () => {
+    const newId = Math.max(...specializationData.map(row => row.id), 0) + 1;
+    setSpecializationData(prev => [
+      ...prev,
+      { id: newId, department: '', '25-26': { intake: '', filled: '' }, '24-25': { intake: '', filled: '' }, '23-24': { intake: '', filled: '' } },
+    ]);
+  };
+
+  const addFacultyRow = () => {
+    const newId = Math.max(...facultyData.map(row => row.id), 0) + 1;
+    setFacultyData(prev => [
+      ...prev,
+      { id: newId, department: '', intake: '', '25-26': { prof: '', asp: '', ap: '' }, '24-25': { prof: '', asp: '', ap: '' }, '23-24': { prof: '', asp: '', ap: '' } },
+    ]);
+  };
+
+  const addPlacementRow = () => {
+    const newId = Math.max(...placementData.map(row => row.id), 0) + 1;
+    setPlacementData(prev => [
+      ...prev,
+      { id: newId, department: '', '25-26': { a: '', b: '', c: '' }, '24-25': { a: '', b: '', c: '' }, '23-24': { a: '', b: '', c: '' } },
+    ]);
+  };
+
+  const addSummaryRow = () => {
+    const newId = Math.max(...placementSummaryData.map(row => row.id), 0) + 1;
+    setPlacementSummaryData(prev => [
+      ...prev,
+      { id: newId, department: '', '25-26': { n: '', x: '' }, '24-25': { n: '', x: '' }, '23-24': { n: '', x: '' } },
+    ]);
+  };
+
+  const addForeignMouRow = () => {
+    const newId = Math.max(...foreignMouData.map(row => row.id), 0) + 1;
+    setForeignMouData(prev => [
+      ...prev,
+      { id: newId, university: '', country: '', validUpto: '' },
+    ]);
+  };
+
+  // Update formData
+  useEffect(() => {
+    setFormData({
+      ...formData,
+      specialization: specializationData,
+      faculty: facultyData,
+      phd: phdData,
+      placement: placementData,
+      placementSummary: placementSummaryData,
+      mous: mouData,
+      foreignMous: foreignMouData,
+    });
+  }, [specializationData, facultyData, phdData, placementData, placementSummaryData, mouData, foreignMouData, setFormData]);
 
   const handleSubmit = async () => {
     setLoading(true);
-    
     try {
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
       alert("Section C submitted successfully");
     } catch (error) {
@@ -33,7 +236,6 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 to-cyan-50 py-12 px-4">
       <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-600 to-teal-700 rounded-full mb-6 shadow-lg">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,7 +258,6 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
         )}
 
         <div className="space-y-8">
-          {/* Specialization Detail Card */}
           <div className="bg-white rounded-2xl shadow-xl border border-teal-100 overflow-hidden">
             <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-8 py-6">
               <h2 className="text-2xl font-bold text-white mb-2">Specialization Detail of Students Admitted</h2>
@@ -81,88 +282,60 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {[1, 2, 3, 4, 5].map((num) => (
-                      <tr key={num} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                        <td className="py-3 px-2 text-center font-medium text-gray-900">{num}</td>
+                    {specializationData.map(row => (
+                      <tr key={row.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                        <td className="py-3 px-2 text-center font-medium text-gray-900">{row.id}</td>
                         <td className="py-3 px-4">
-                          <input 
-                            type="text" 
-                            placeholder="Enter department" 
+                          <input
+                            type="text"
+                            value={row.department}
+                            onChange={(e) => setSpecializationData(prev =>
+                              prev.map(r => r.id === row.id ? { ...r, department: e.target.value } : r)
+                            )}
+                            placeholder="Enter department"
                             className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
                           />
                         </td>
-                        <td className="py-3 px-2">
-                          <input 
-                            type="number" 
-                            placeholder="Intake" 
-                            className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
-                          />
-                        </td>
-                        <td className="py-3 px-2">
-                          <input 
-                            type="number" 
-                            placeholder="Filled" 
-                            className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
-                          />
-                        </td>
-                        <td className="py-3 px-2">
-                          <input 
-                            type="number" 
-                            placeholder="%" 
-                            disabled 
-                            className="w-full px-2 py-1 border border-gray-300 rounded bg-gray-100 text-gray-600 cursor-not-allowed text-sm"
-                          />
-                        </td>
-                        <td className="py-3 px-2">
-                          <input 
-                            type="number" 
-                            placeholder="Intake" 
-                            className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
-                          />
-                        </td>
-                        <td className="py-3 px-2">
-                          <input 
-                            type="number" 
-                            placeholder="Filled" 
-                            className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
-                          />
-                        </td>
-                        <td className="py-3 px-2">
-                          <input 
-                            type="number" 
-                            placeholder="%" 
-                            disabled 
-                            className="w-full px-2 py-1 border border-gray-300 rounded bg-gray-100 text-gray-600 cursor-not-allowed text-sm"
-                          />
-                        </td>
-                        <td className="py-3 px-2">
-                          <input 
-                            type="number" 
-                            placeholder="Intake" 
-                            className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
-                          />
-                        </td>
-                        <td className="py-3 px-2">
-                          <input 
-                            type="number" 
-                            placeholder="Filled" 
-                            className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
-                          />
-                        </td>
-                        <td className="py-3 px-2">
-                          <input 
-                            type="number" 
-                            placeholder="%" 
-                            disabled 
-                            className="w-full px-2 py-1 border border-gray-300 rounded bg-gray-100 text-gray-600 cursor-not-allowed text-sm"
-                          />
-                        </td>
+                        {['25-26', '24-25', '23-24'].map(year => (
+                          <React.Fragment key={year}>
+                            <td className="py-3 px-2">
+                              <input
+                                type="number"
+                                value={row[year].intake}
+                                onChange={(e) => handleSpecializationChange(row.id, 'intake', year, e.target.value)}
+                                placeholder="Intake"
+                                className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
+                              />
+                            </td>
+                            <td className="py-3 px-2">
+                              <input
+                                type="number"
+                                value={row[year].filled}
+                                onChange={(e) => handleSpecializationChange(row.id, 'filled', year, e.target.value)}
+                                placeholder="Filled"
+                                className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
+                              />
+                            </td>
+                            <td className="py-3 px-2">
+                              <input
+                                type="number"
+                                value={calculateSpecializationPercent(row[year].intake, row[year].filled)}
+                                disabled
+                                className="w-full px-2 py-1 border border-gray-300 rounded bg-gray-100 text-gray-600 cursor-not-allowed text-sm"
+                              />
+                            </td>
+                          </React.Fragment>
+                        ))}
                       </tr>
                     ))}
                   </tbody>
                 </table>
                 <div className="mt-4 text-center">
-                  <button className="text-teal-600 hover:text-teal-700 font-medium transition-colors">
+                  <button
+                    type="button"
+                    onClick={addSpecializationRow}
+                    className="text-teal-600 hover:text-teal-700 font-medium transition-colors"
+                  >
                     + Add more rows
                   </button>
                 </div>
@@ -170,7 +343,6 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
             </div>
           </div>
 
-          {/* Faculty Details Card */}
           <div className="bg-white rounded-2xl shadow-xl border border-teal-100 overflow-hidden">
             <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-8 py-6">
               <h2 className="text-2xl font-bold text-white mb-2">Faculty Details (Permanent Faculty Only)</h2>
@@ -202,56 +374,107 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {[1, 2, 3, 4].map((num) => (
-                      <tr key={num} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                        <td className="py-3 px-2 text-center font-medium text-gray-900 border-r border-gray-200">{num}</td>
+                    {facultyData.map(row => (
+                      <tr key={row.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                        <td className="py-3 px-2 text-center font-medium text-gray-900 border-r border-gray-200">{row.id}</td>
                         <td className="py-3 px-4 border-r border-gray-200">
-                          <input 
-                            type="text" 
-                            placeholder="Enter department" 
+                          <input
+                            type="text"
+                            value={row.department}
+                            onChange={(e) => handleFacultyChange(row.id, 'department', null, e.target.value)}
+                            placeholder="Enter department"
                             className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
                           />
                         </td>
                         <td className="py-3 px-3 border-r border-gray-200">
-                          <input 
-                            type="text" 
-                            placeholder="Enter intake" 
+                          <input
+                            type="text"
+                            value={row.intake}
+                            onChange={(e) => handleFacultyChange(row.id, 'intake', null, e.target.value)}
+                            placeholder="Enter intake"
                             className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
                           />
                         </td>
-                        {/* Faculty inputs for each year */}
-                        {Array.from({ length: 9 }, (_, i) => (
-                          <td key={i} className={`py-3 px-2 ${(i + 1) % 3 === 0 ? 'border-r border-gray-200' : ''}`}>
-                            <input 
-                              type="number" 
-                              placeholder="0" 
-                              className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
-                            />
-                          </td>
+                        {['25-26', '24-25', '23-24'].map(year => (
+                          <React.Fragment key={year}>
+                            <td className="py-3 px-2">
+                              <input
+                                type="number"
+                                value={row[year].prof}
+                                onChange={(e) => handleFacultyChange(row.id, 'prof', year, e.target.value)}
+                                placeholder="0"
+                                className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
+                              />
+                            </td>
+                            <td className="py-3 px-2">
+                              <input
+                                type="number"
+                                value={row[year].asp}
+                                onChange={(e) => handleFacultyChange(row.id, 'asp', year, e.target.value)}
+                                placeholder="0"
+                                className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
+                              />
+                            </td>
+                            <td className={`py-3 px-2 ${year !== '23-24' ? 'border-r border-gray-200' : ''}`}>
+                              <input
+                                type="number"
+                                value={row[year].ap}
+                                onChange={(e) => handleFacultyChange(row.id, 'ap', year, e.target.value)}
+                                placeholder="0"
+                                className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
+                              />
+                            </td>
+                          </React.Fragment>
                         ))}
                       </tr>
                     ))}
                     <tr className="border-b-2 border-gray-300 bg-teal-50">
                       <td colSpan="2" className="py-3 px-4 font-bold text-gray-900 border-r border-gray-200">Total</td>
                       <td className="py-3 px-3 border-r border-gray-200"></td>
-                      {Array.from({ length: 9 }, (_, i) => (
-                        <td key={i} className={`py-3 px-2 ${(i + 1) % 3 === 0 ? 'border-r border-gray-200' : ''}`}>
-                          <input 
-                            type="number" 
-                            placeholder="Auto" 
-                            disabled 
-                            className="w-full px-2 py-1 border border-gray-300 rounded bg-gray-100 text-gray-600 cursor-not-allowed text-sm"
-                          />
-                        </td>
+                      {['25-26', '24-25', '23-24'].map(year => (
+                        <React.Fragment key={year}>
+                          <td className="py-3 px-2">
+                            <input
+                              type="number"
+                              value={facultyTotals[year].prof}
+                              disabled
+                              className="w-full px-2 py-1 border border-gray-300 rounded bg-gray-100 text-gray-600 cursor-not-allowed text-sm"
+                            />
+                          </td>
+                          <td className="py-3 px-2">
+                            <input
+                              type="number"
+                              value={facultyTotals[year].asp}
+                              disabled
+                              className="w-full px-2 py-1 border border-gray-300 rounded bg-gray-100 text-gray-600 cursor-not-allowed text-sm"
+                            />
+                          </td>
+                          <td className={`py-3 px-2 ${year !== '23-24' ? 'border-r border-gray-200' : ''}`}>
+                            <input
+                              type="number"
+                              value={facultyTotals[year].ap}
+                              disabled
+                              className="w-full px-2 py-1 border border-gray-300 rounded bg-gray-100 text-gray-600 cursor-not-allowed text-sm"
+                            />
+                          </td>
+                        </React.Fragment>
                       ))}
                     </tr>
                   </tbody>
                 </table>
+                <div className="mt-4 text-center">
+                  <button
+                    type="button"
+                    onClick={addFacultyRow}
+                    className="text-teal-600 hover:text-teal-700 font-medium transition-colors"
+                  >
+                    + Add more rows
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Ph.D. Holders Card */}
           <div className="bg-white rounded-2xl shadow-xl border border-teal-100 overflow-hidden">
             <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-8 py-6">
               <h2 className="text-2xl font-bold text-white mb-2">Number of Ph.D. Holders in the Institute</h2>
@@ -269,28 +492,32 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {['25-26', '24-25', '23-24'].map((year) => (
+                    {['25-26', '24-25', '23-24'].map(year => (
                       <tr key={year} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
                         <td className="py-4 px-6 text-center font-medium text-gray-900">{year}</td>
                         <td className="py-4 px-6">
-                          <input 
-                            type="number" 
-                            placeholder="Enter count" 
+                          <input
+                            type="number"
+                            value={phdData[year].total}
+                            onChange={(e) => handlePhdChange(year, 'total', e.target.value)}
+                            placeholder="Enter count"
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                           />
                         </td>
                         <td className="py-4 px-6">
-                          <input 
-                            type="number" 
-                            placeholder="Enter count" 
+                          <input
+                            type="number"
+                            value={phdData[year].phd}
+                            onChange={(e) => handlePhdChange(year, 'phd', e.target.value)}
+                            placeholder="Enter count"
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                           />
                         </td>
                         <td className="py-4 px-6">
-                          <input 
-                            type="number" 
-                            placeholder="Auto-calculated" 
-                            disabled 
+                          <input
+                            type="number"
+                            value={calculatePhdPercent(phdData[year].total, phdData[year].phd)}
+                            disabled
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
                           />
                         </td>
@@ -302,57 +529,6 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
             </div>
           </div>
 
-          {/* Additional Academic Details Card */}
-          <div className="bg-white rounded-2xl shadow-xl border border-teal-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-8 py-6">
-              <h2 className="text-2xl font-bold text-white mb-2">Additional Academic Details</h2>
-              <p className="text-teal-100">Provide additional academic metrics for the institute.</p>
-            </div>
-            <div className="p-8 space-y-6">
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  Average teaching experience of faculty (permanent faculty)
-                </label>
-                <input 
-                  type="number" 
-                  placeholder="Enter years" 
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  Number of credits earned by the students (after completion of the course)
-                </label>
-                <input 
-                  type="number" 
-                  placeholder="Enter number" 
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  Number of contact hours given to the credits
-                </label>
-                <input 
-                  type="number" 
-                  placeholder="Enter hours" 
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  Number of faculty members scored below threshold in student feedback (Last AY)
-                </label>
-                <input 
-                  type="number" 
-                  placeholder="Enter number" 
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Placement Details Card */}
           <div className="bg-white rounded-2xl shadow-xl border border-teal-100 overflow-hidden">
             <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-8 py-6">
               <h2 className="text-2xl font-bold text-white mb-2">Placement (A), Higher Education (B), and Entrepreneurship (C)</h2>
@@ -380,39 +556,76 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {[1, 2, 3, 4, 5].map((num) => (
-                      <tr key={num} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                        <td className="py-3 px-2 text-center font-medium text-gray-900">{num}</td>
+                    {placementData.map(row => (
+                      <tr key={row.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                        <td className="py-3 px-2 text-center font-medium text-gray-900">{row.id}</td>
                         <td className="py-3 px-4">
-                          <input 
-                            type="text" 
-                            placeholder="Enter department" 
+                          <input
+                            type="text"
+                            value={row.department}
+                            onChange={(e) => setPlacementData(prev =>
+                              prev.map(r => r.id === row.id ? { ...r, department: e.target.value } : r)
+                            )}
+                            placeholder="Enter department"
                             className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
                           />
                         </td>
-                        {/* Year columns with different inputs */}
-                        {Array.from({ length: 12 }, (_, i) => {
-                          const isTotal = (i + 1) % 4 === 0;
-                          return (
-                            <td key={i} className="py-3 px-2">
-                              <input 
-                                type="number" 
-                                placeholder={isTotal ? "Total" : "Count"} 
-                                disabled={isTotal}
-                                className={`w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm ${isTotal ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : ''}`}
+                        {['25-26', '24-25', '23-24'].map(year => (
+                          <React.Fragment key={year}>
+                            <td className="py-3 px-2">
+                              <input
+                                type="number"
+                                value={row[year].a}
+                                onChange={(e) => handlePlacementChange(row.id, 'a', year, e.target.value)}
+                                placeholder="Count"
+                                className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
                               />
                             </td>
-                          );
-                        })}
+                            <td className="py-3 px-2">
+                              <input
+                                type="number"
+                                value={row[year].b}
+                                onChange={(e) => handlePlacementChange(row.id, 'b', year, e.target.value)}
+                                placeholder="Count"
+                                className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
+                              />
+                            </td>
+                            <td className="py-3 px-2">
+                              <input
+                                type="number"
+                                value={row[year].c}
+                                onChange={(e) => handlePlacementChange(row.id, 'c', year, e.target.value)}
+                                placeholder="Count"
+                                className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
+                              />
+                            </td>
+                            <td className="py-3 px-2">
+                              <input
+                                type="number"
+                                value={calculatePlacementTotals(row, year)}
+                                disabled
+                                className="w-full px-2 py-1 border border-gray-300 rounded bg-gray-100 text-gray-600 cursor-not-allowed text-sm"
+                              />
+                            </td>
+                          </React.Fragment>
+                        ))}
                       </tr>
                     ))}
                   </tbody>
                 </table>
+                <div className="mt-4 text-center">
+                  <button
+                    type="button"
+                    onClick={addPlacementRow}
+                    className="text-teal-600 hover:text-teal-700 font-medium transition-colors"
+                  >
+                    + Add more rows
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Placement Summary Card */}
           <div className="bg-white rounded-2xl shadow-xl border border-teal-100 overflow-hidden">
             <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-8 py-6">
               <h2 className="text-2xl font-bold text-white mb-2">Placement, Higher Education, and Entrepreneurship Summary</h2>
@@ -437,38 +650,67 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {[1, 2, 3, 4, 5].map((num) => (
-                      <tr key={num} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                        <td className="py-3 px-2 text-center font-medium text-gray-900">{num}</td>
+                    {placementSummaryData.map(row => (
+                      <tr key={row.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                        <td className="py-3 px-2 text-center font-medium text-gray-900">{row.id}</td>
                         <td className="py-3 px-4">
-                          <input 
-                            type="text" 
-                            placeholder="Enter department" 
+                          <input
+                            type="text"
+                            value={row.department}
+                            onChange={(e) => setPlacementSummaryData(prev =>
+                              prev.map(r => r.id === row.id ? { ...r, department: e.target.value } : r)
+                            )}
+                            placeholder="Enter department"
                             className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
                           />
                         </td>
-                        {Array.from({ length: 9 }, (_, i) => {
-                          const isPercentage = (i + 1) % 3 === 0;
-                          return (
-                            <td key={i} className="py-3 px-2">
-                              <input 
-                                type="number" 
-                                placeholder={isPercentage ? "%" : "Count"} 
-                                disabled={isPercentage}
-                                className={`w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm ${isPercentage ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : ''}`}
+                        {['25-26', '24-25', '23-24'].map(year => (
+                          <React.Fragment key={year}>
+                            <td className="py-3 px-2">
+                              <input
+                                type="number"
+                                value={row[year].n}
+                                onChange={(e) => handleSummaryChange(row.id, 'n', year, e.target.value)}
+                                placeholder="Count"
+                                className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
                               />
                             </td>
-                          );
-                        })}
+                            <td className="py-3 px-2">
+                              <input
+                                type="number"
+                                value={row[year].x}
+                                onChange={(e) => handleSummaryChange(row.id, 'x', year, e.target.value)}
+                                placeholder="Count"
+                                className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
+                              />
+                            </td>
+                            <td className="py-3 px-2">
+                              <input
+                                type="number"
+                                value={calculateSummaryPercent(row[year].n, row[year].x)}
+                                disabled
+                                className="w-full px-2 py-1 border border-gray-300 rounded bg-gray-100 text-gray-600 cursor-not-allowed text-sm"
+                              />
+                            </td>
+                          </React.Fragment>
+                        ))}
                       </tr>
                     ))}
                   </tbody>
                 </table>
+                <div className="mt-4 text-center">
+                  <button
+                    type="button"
+                    onClick={addSummaryRow}
+                    className="text-teal-600 hover:text-teal-700 font-medium transition-colors"
+                  >
+                    + Add more rows
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Placement Salary Details Card */}
           <div className="bg-white rounded-2xl shadow-xl border border-teal-100 overflow-hidden">
             <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-8 py-6">
               <h2 className="text-2xl font-bold text-white mb-2">Placement Salary Details</h2>
@@ -492,28 +734,28 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                       { id: 2, particular: 'Lowest salary' },
                       { id: 3, particular: 'Median salary' },
                       { id: 4, particular: 'Mean salary' },
-                    ].map((item) => (
+                    ].map(item => (
                       <tr key={item.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
                         <td className="py-4 px-4 text-center font-medium text-gray-900">{item.id}</td>
                         <td className="py-4 px-6 font-medium text-gray-900">{item.particular}</td>
                         <td className="py-4 px-4">
-                          <input 
-                            type="number" 
-                            placeholder="Enter amount in ₹" 
+                          <input
+                            type="number"
+                            placeholder="Enter amount in ₹"
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                           />
                         </td>
                         <td className="py-4 px-4">
-                          <input 
-                            type="number" 
-                            placeholder="Enter amount in ₹" 
+                          <input
+                            type="number"
+                            placeholder="Enter amount in ₹"
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                           />
                         </td>
                         <td className="py-4 px-4">
-                          <input 
-                            type="number" 
-                            placeholder="Enter amount in ₹" 
+                          <input
+                            type="number"
+                            placeholder="Enter amount in ₹"
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                           />
                         </td>
@@ -525,7 +767,6 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
             </div>
           </div>
 
-          {/* Student Contact Details Card */}
           <div className="bg-white rounded-2xl shadow-xl border border-teal-100 overflow-hidden">
             <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-8 py-6">
               <h2 className="text-2xl font-bold text-white mb-2">Student Contact Details for Last Passed Out Batch</h2>
@@ -542,20 +783,20 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {[...Array(10).keys()].map((num) => (
+                    {[...Array(10).keys()].map(num => (
                       <tr key={num + 1} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
                         <td className="py-4 px-4 text-center font-medium text-gray-900">{num + 1}</td>
                         <td className="py-4 px-6">
-                          <input 
-                            type="text" 
-                            placeholder="Enter name and department" 
+                          <input
+                            type="text"
+                            placeholder="Enter name and department"
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                           />
                         </td>
                         <td className="py-4 px-6">
-                          <input 
-                            type="email" 
-                            placeholder="Enter email address" 
+                          <input
+                            type="email"
+                            placeholder="Enter email address"
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                           />
                         </td>
@@ -567,7 +808,6 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
             </div>
           </div>
 
-          {/* Number of Active MoUs Card */}
           <div className="bg-white rounded-2xl shadow-xl border border-teal-100 overflow-hidden">
             <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-8 py-6">
               <h2 className="text-2xl font-bold text-white mb-2">Number of Active MoUs</h2>
@@ -583,13 +823,15 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {['24-25', '23-24', '22-23'].map((year) => (
+                    {['24-25', '23-24', '22-23'].map(year => (
                       <tr key={year} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
                         <td className="py-4 px-6 text-center font-medium text-gray-900">{year}</td>
                         <td className="py-4 px-6">
-                          <input 
-                            type="number" 
-                            placeholder="Enter count" 
+                          <input
+                            type="number"
+                            value={mouData[year]}
+                            onChange={(e) => handleMouChange(year, e.target.value)}
+                            placeholder="Enter count"
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                           />
                         </td>
@@ -598,10 +840,10 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                     <tr className="border-b-2 border-gray-300 bg-teal-50">
                       <td className="py-4 px-6 text-center font-bold text-gray-900">Total</td>
                       <td className="py-4 px-6">
-                        <input 
-                          type="number" 
-                          placeholder="Auto-calculated" 
-                          disabled 
+                        <input
+                          type="number"
+                          value={mouTotal}
+                          disabled
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
                         />
                       </td>
@@ -612,7 +854,6 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
             </div>
           </div>
 
-          {/* Other Institutional Information Card */}
           <div className="bg-white rounded-2xl shadow-xl border border-teal-100 overflow-hidden">
             <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-8 py-6">
               <h2 className="text-2xl font-bold text-white mb-2">Other Institutional Information</h2>
@@ -672,9 +913,9 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                   <label className="block text-sm font-semibold text-gray-900 mb-2">
                     Number of Inter-college competitions organized in the last AY (Techno cultural)
                   </label>
-                  <input 
-                    type="number" 
-                    placeholder="Enter number" 
+                  <input
+                    type="number"
+                    placeholder="Enter number"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                   />
                 </div>
@@ -682,9 +923,9 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                   <label className="block text-sm font-semibold text-gray-900 mb-2">
                     Number of Intra-college competitions organized in the last AY (Techno cultural)
                   </label>
-                  <input 
-                    type="number" 
-                    placeholder="Enter number" 
+                  <input
+                    type="number"
+                    placeholder="Enter number"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                   />
                 </div>
@@ -695,9 +936,9 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                   <label className="block text-sm font-semibold text-gray-900 mb-2">
                     Number of clubs/Societies available
                   </label>
-                  <input 
-                    type="number" 
-                    placeholder="Enter number" 
+                  <input
+                    type="number"
+                    placeholder="Enter number"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                   />
                 </div>
@@ -705,9 +946,9 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                   <label className="block text-sm font-semibold text-gray-900 mb-2">
                     Availability of Mentor-Mentee System (if yes, provide ratio)
                   </label>
-                  <input 
-                    type="text" 
-                    placeholder="Enter ratio (e.g., 1:20)" 
+                  <input
+                    type="text"
+                    placeholder="Enter ratio (e.g., 1:20)"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                   />
                 </div>
@@ -741,9 +982,9 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                 <label className="block text-sm font-semibold text-gray-900 mb-2">
                   Number of programs conducted for students/faculty (Yoga, Emotional Intelligence, Stress Management, Ethics)
                 </label>
-                <input 
-                  type="text" 
-                  placeholder="Enter number and link" 
+                <input
+                  type="text"
+                  placeholder="Enter number and link"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                 />
               </div>
@@ -752,9 +993,9 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                 <label className="block text-sm font-semibold text-gray-900 mb-4">
                   Does your institute have MoUs with Foreign Universities?
                 </label>
-                <input 
-                  type="text" 
-                  placeholder="Enter link" 
+                <input
+                  type="text"
+                  placeholder="Enter link"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 mb-6"
                 />
                 <div className="overflow-x-auto">
@@ -768,26 +1009,32 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {[1, 2, 3].map((num) => (
-                        <tr key={num} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                          <td className="py-3 px-4 text-center font-medium text-gray-900">{num}</td>
+                      {foreignMouData.map(row => (
+                        <tr key={row.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                          <td className="py-3 px-4 text-center font-medium text-gray-900">{row.id}</td>
                           <td className="py-3 px-6">
-                            <input 
-                              type="text" 
-                              placeholder="Enter university" 
+                            <input
+                              type="text"
+                              value={row.university}
+                              onChange={(e) => handleForeignMouChange(row.id, 'university', e.target.value)}
+                              placeholder="Enter university"
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                             />
                           </td>
                           <td className="py-3 px-6">
-                            <input 
-                              type="text" 
-                              placeholder="Enter country" 
+                            <input
+                              type="text"
+                              value={row.country}
+                              onChange={(e) => handleForeignMouChange(row.id, 'country', e.target.value)}
+                              placeholder="Enter country"
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                             />
                           </td>
                           <td className="py-3 px-6">
-                            <input 
-                              type="date" 
+                            <input
+                              type="date"
+                              value={row.validUpto}
+                              onChange={(e) => handleForeignMouChange(row.id, 'validUpto', e.target.value)}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900"
                             />
                           </td>
@@ -795,6 +1042,15 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                       ))}
                     </tbody>
                   </table>
+                  <div className="mt-4 text-center">
+                    <button
+                      type="button"
+                      onClick={addForeignMouRow}
+                      className="text-teal-600 hover:text-teal-700 font-medium transition-colors"
+                    >
+                      + Add more rows
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -820,18 +1076,16 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                     <label htmlFor="language_no" className="text-gray-900 font-medium cursor-pointer">No</label>
                   </div>
                 </div>
-                <input 
-                  type="text" 
-                  placeholder="Enter link for certification details" 
+                <input
+                  type="text"
+                  placeholder="Enter link for certification details"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
                 />
               </div>
             </div>
           </div>
 
-          {/* Navigation Section */}
           <div className="flex justify-between items-center pt-8">
-            {/* Back Button */}
             {onBack && (
               <button
                 type="button"
@@ -842,8 +1096,6 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                 Back to Section B
               </button>
             )}
-            
-            {/* Submit/Save and Next buttons */}
             <div className="flex space-x-4 ml-auto">
               <button
                 type="button"
@@ -860,7 +1112,6 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                   "Save Section C"
                 )}
               </button>
-
               {onNext && (
                 <button
                   type="button"
@@ -873,16 +1124,15 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
               )}
             </div>
           </div>
-        </div>
 
-        {/* Footer */}
-        <div className="text-center mt-12 pt-8 border-t border-teal-200">
-          <p className="text-gray-600">
-            Need help? Contact our support team at{" "}
-            <a href="mailto:support@institution.edu" className="text-teal-600 hover:text-teal-700 font-medium">
-              support@institution.edu
-            </a>
-          </p>
+          <div className="text-center mt-12 pt-8 border-t border-teal-200">
+            <p className="text-gray-600">
+              Need help? Contact our support team at{" "}
+              <a href="mailto:support@institution.edu" className="text-teal-600 hover:text-teal-700 font-medium">
+                support@institution.edu
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
