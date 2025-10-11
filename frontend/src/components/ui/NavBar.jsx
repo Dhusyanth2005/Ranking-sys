@@ -1,13 +1,14 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { User, Settings, LogOut } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { User, Settings, LogOut, ChevronDown, FileText } from 'lucide-react';
 import logo from '../../assets/logo.svg';
 
 const NavBar = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const navigate = useNavigate();
   const [user, setUser] = useState({ name: 'John Doe', email: 'john@example.com' });
+  const dropdownRef = useRef(null);
 
   const handleLogin = (page) => {
     // Navigate to /auth with a query parameter indicating the form to show
@@ -19,6 +20,27 @@ const NavBar = () => {
     setUser(null);
     setShowProfileDropdown(false);
   };
+
+  const toggleDropdown = () => {
+    setShowProfileDropdown(!showProfileDropdown);
+  };
+
+  // Click away listener
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowProfileDropdown(false);
+      }
+    };
+
+    if (showProfileDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showProfileDropdown]);
 
   return (
     <nav className="bg-white shadow-lg border-b border-teal-100 relative z-50">
@@ -34,7 +56,7 @@ const NavBar = () => {
           
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
-              {['home', 'about', 'leaderboard', 'submission', 'faqs', 'contact'].map((item) => (
+              {['home', 'about', 'leaderboard', 'Application', 'faqs', 'contact'].map((item) => (
                 <NavLink
                   key={item}
                   to={item === 'home' ? '/' : `/${item}`}
@@ -69,22 +91,20 @@ const NavBar = () => {
                 </button>
               </div>
             ) : (
-              <div className="relative">
+              <div className="relative" ref={dropdownRef}>
                 <button
-                  onMouseEnter={() => setShowProfileDropdown(true)}
-                  onMouseLeave={() => setShowProfileDropdown(false)}
-                  className="flex items-center space-x-2 p-2 rounded-full hover:bg-teal-50 transition-colors duration-200"
+                  onClick={toggleDropdown}
+                  className="flex items-center space-x-2 p-2 border border-gray-300 rounded-full hover:bg-teal-50 transition-colors duration-200"
                 >
                   <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center">
                     <User className="w-5 h-5 text-white" />
                   </div>
+                  <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform duration-200 ${showProfileDropdown ? 'rotate-180' : ''}`} />
                 </button>
                 
                 {showProfileDropdown && (
                   <div 
-                    className="absolute right-0 mt-0 w-48 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-50"
-                    onMouseEnter={() => setShowProfileDropdown(true)}
-                    onMouseLeave={() => setShowProfileDropdown(false)}
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-50"
                   >
                     <div className="px-4 py-2 border-b border-gray-100">
                       <p className="text-sm font-medium text-gray-900">{user?.name}</p>
@@ -94,6 +114,11 @@ const NavBar = () => {
                     <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
                       <User className="w-4 h-4" />
                       <span>Profile</span>
+                    </button>
+                    
+                    <button onClick={()=>navigate("/submissions")}className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
+                      <FileText className="w-4 h-4" />
+                      <span>Submissions</span>
                     </button>
                     
                     <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">

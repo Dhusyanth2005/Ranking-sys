@@ -3,46 +3,52 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
   const [loading, setLoading] = useState(false);
-  const [specializationData, setSpecializationData] = useState([
+  const initialSpecializationData = [
     { id: 1, department: '', '25-26': { intake: '', filled: '' }, '24-25': { intake: '', filled: '' }, '23-24': { intake: '', filled: '' } },
     { id: 2, department: '', '25-26': { intake: '', filled: '' }, '24-25': { intake: '', filled: '' }, '23-24': { intake: '', filled: '' } },
     { id: 3, department: '', '25-26': { intake: '', filled: '' }, '24-25': { intake: '', filled: '' }, '23-24': { intake: '', filled: '' } },
     { id: 4, department: '', '25-26': { intake: '', filled: '' }, '24-25': { intake: '', filled: '' }, '23-24': { intake: '', filled: '' } },
     { id: 5, department: '', '25-26': { intake: '', filled: '' }, '24-25': { intake: '', filled: '' }, '23-24': { intake: '', filled: '' } },
-  ]);
-  const [facultyData, setFacultyData] = useState([
+  ];
+  const initialFacultyData = [
     { id: 1, department: '', intake: '', '25-26': { prof: '', asp: '', ap: '' }, '24-25': { prof: '', asp: '', ap: '' }, '23-24': { prof: '', asp: '', ap: '' } },
     { id: 2, department: '', intake: '', '25-26': { prof: '', asp: '', ap: '' }, '24-25': { prof: '', asp: '', ap: '' }, '23-24': { prof: '', asp: '', ap: '' } },
     { id: 3, department: '', intake: '', '25-26': { prof: '', asp: '', ap: '' }, '24-25': { prof: '', asp: '', ap: '' }, '23-24': { prof: '', asp: '', ap: '' } },
     { id: 4, department: '', intake: '', '25-26': { prof: '', asp: '', ap: '' }, '24-25': { prof: '', asp: '', ap: '' }, '23-24': { prof: '', asp: '', ap: '' } },
-  ]);
-  const [phdData, setPhdData] = useState({
-    '25-26': { total: '', phd: '' },
-    '24-25': { total: '', phd: '' },
-    '23-24': { total: '', phd: '' },
-  });
-  const [placementData, setPlacementData] = useState([
+  ];
+  const initialPlacementData = [
     { id: 1, department: '', '25-26': { a: '', b: '', c: '' }, '24-25': { a: '', b: '', c: '' }, '23-24': { a: '', b: '', c: '' } },
     { id: 2, department: '', '25-26': { a: '', b: '', c: '' }, '24-25': { a: '', b: '', c: '' }, '23-24': { a: '', b: '', c: '' } },
     { id: 3, department: '', '25-26': { a: '', b: '', c: '' }, '24-25': { a: '', b: '', c: '' }, '23-24': { a: '', b: '', c: '' } },
     { id: 4, department: '', '25-26': { a: '', b: '', c: '' }, '24-25': { a: '', b: '', c: '' }, '23-24': { a: '', b: '', c: '' } },
     { id: 5, department: '', '25-26': { a: '', b: '', c: '' }, '24-25': { a: '', b: '', c: '' }, '23-24': { a: '', b: '', c: '' } },
-  ]);
-  const [placementSummaryData, setPlacementSummaryData] = useState([
+  ];
+  const initialPlacementSummaryData = [
     { id: 1, department: '', '25-26': { n: '', x: '' }, '24-25': { n: '', x: '' }, '23-24': { n: '', x: '' } },
     { id: 2, department: '', '25-26': { n: '', x: '' }, '24-25': { n: '', x: '' }, '23-24': { n: '', x: '' } },
     { id: 3, department: '', '25-26': { n: '', x: '' }, '24-25': { n: '', x: '' }, '23-24': { n: '', x: '' } },
     { id: 4, department: '', '25-26': { n: '', x: '' }, '24-25': { n: '', x: '' }, '23-24': { n: '', x: '' } },
     { id: 5, department: '', '25-26': { n: '', x: '' }, '24-25': { n: '', x: '' }, '23-24': { n: '', x: '' } },
-  ]);
-  const [mouData, setMouData] = useState({
-    '24-25': '', '23-24': '', '22-23': '',
-  });
-  const [foreignMouData, setForeignMouData] = useState([
+  ];
+  const initialForeignMouData = [
     { id: 1, university: '', country: '', validUpto: '' },
     { id: 2, university: '', country: '', validUpto: '' },
     { id: 3, university: '', country: '', validUpto: '' },
-  ]);
+  ];
+
+  const [specializationData, setSpecializationData] = useState(initialSpecializationData);
+  const [facultyData, setFacultyData] = useState(initialFacultyData);
+  const [phdData, setPhdData] = useState({
+    '25-26': { total: '', phd: '' },
+    '24-25': { total: '', phd: '' },
+    '23-24': { total: '', phd: '' },
+  });
+  const [placementData, setPlacementData] = useState(initialPlacementData);
+  const [placementSummaryData, setPlacementSummaryData] = useState(initialPlacementSummaryData);
+  const [mouData, setMouData] = useState({
+    '24-25': '', '23-24': '', '22-23': '',
+  });
+  const [foreignMouData, setForeignMouData] = useState(initialForeignMouData);
 
   // Calculate percentages for Specialization
   const calculateSpecializationPercent = (intake, filled) => {
@@ -66,6 +72,13 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
       });
     });
     return totals;
+  };
+
+  // Calculate V formula: V = (3 × Prof + 2 × ASP + 1 × AP) / 2.5
+  const calculateVFormula = (year) => {
+    const totals = calculateFacultyTotals();
+    const { prof, asp, ap } = totals[year];
+    return ((3 * Number(prof) + 2 * Number(asp) + Number(ap)) / 2.5).toFixed(2);
   };
 
   // Calculate Ph.D. percentages
@@ -193,6 +206,27 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
       ...prev,
       { id: newId, university: '', country: '', validUpto: '' },
     ]);
+  };
+
+  // Remove row handlers
+  const removeSpecializationRow = () => {
+    setSpecializationData(prev => prev.slice(0, -1));
+  };
+
+  const removeFacultyRow = () => {
+    setFacultyData(prev => prev.slice(0, -1));
+  };
+
+  const removePlacementRow = () => {
+    setPlacementData(prev => prev.slice(0, -1));
+  };
+
+  const removeSummaryRow = () => {
+    setPlacementSummaryData(prev => prev.slice(0, -1));
+  };
+
+  const removeForeignMouRow = () => {
+    setForeignMouData(prev => prev.slice(0, -1));
   };
 
   // Update formData
@@ -330,7 +364,7 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                     ))}
                   </tbody>
                 </table>
-                <div className="mt-4 text-center">
+                <div className="mt-4 flex justify-center space-x-4">
                   <button
                     type="button"
                     onClick={addSpecializationRow}
@@ -338,6 +372,15 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                   >
                     + Add more rows
                   </button>
+                  {specializationData.length > initialSpecializationData.length && (
+                    <button
+                      type="button"
+                      onClick={removeSpecializationRow}
+                      className="text-red-600 hover:text-red-700 font-medium transition-colors"
+                    >
+                      - Remove last row
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -460,9 +503,25 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                         </React.Fragment>
                       ))}
                     </tr>
+                    <tr className="border-b-2 border-gray-300 bg-teal-100">
+                      <td colSpan="2" className="py-3 px-4 font-bold text-gray-900 border-r border-gray-200">V</td>
+                      <td className="py-3 px-3 border-r border-gray-200"></td>
+                      {['25-26', '24-25', '23-24'].map(year => (
+                        <React.Fragment key={year}>
+                          <td colSpan="3" className={`py-3 px-2 ${year !== '23-24' ? 'border-r border-gray-200' : ''}`}>
+                            <input
+                              type="number"
+                              value={calculateVFormula(year)}
+                              disabled
+                              className="w-full px-2 py-1 border border-gray-300 rounded bg-gray-100 text-gray-600 cursor-not-allowed text-sm"
+                            />
+                          </td>
+                        </React.Fragment>
+                      ))}
+                    </tr>
                   </tbody>
                 </table>
-                <div className="mt-4 text-center">
+                <div className="mt-4 flex justify-center space-x-4">
                   <button
                     type="button"
                     onClick={addFacultyRow}
@@ -470,6 +529,15 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                   >
                     + Add more rows
                   </button>
+                  {facultyData.length > initialFacultyData.length && (
+                    <button
+                      type="button"
+                      onClick={removeFacultyRow}
+                      className="text-red-600 hover:text-red-700 font-medium transition-colors"
+                    >
+                      - Remove last row
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -539,27 +607,32 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                 <table className="w-full border-collapse text-sm">
                   <thead>
                     <tr className="border-b-2 border-gray-200">
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-gray-50">Sl.No</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-900 bg-gray-50">Department</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-blue-50">25-26 A</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-blue-50">25-26 B</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-blue-50">25-26 C</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-blue-50">25-26 T</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-green-50">24-25 A</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-green-50">24-25 B</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-green-50">24-25 C</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-green-50">24-25 T</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-yellow-50">23-24 A</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-yellow-50">23-24 B</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-yellow-50">23-24 C</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-yellow-50">23-24 T</th>
+                      <th rowSpan="2" className="text-center py-3 px-2 font-semibold text-gray-900 bg-gray-50 border-r border-gray-200">Sl.No</th>
+                      <th rowSpan="2" className="text-left py-3 px-4 font-semibold text-gray-900 bg-gray-50 border-r border-gray-200">Department</th>
+                      <th colSpan="4" className="text-center py-3 px-2 font-semibold text-gray-900 bg-blue-50 border-r border-gray-200">25-26</th>
+                      <th colSpan="4" className="text-center py-3 px-2 font-semibold text-gray-900 bg-green-50 border-r border-gray-200">24-25</th>
+                      <th colSpan="4" className="text-center py-3 px-2 font-semibold text-gray-900 bg-yellow-50">23-24</th>
+                    </tr>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-blue-50">A</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-blue-50">B</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-blue-50">C</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-blue-50 border-r border-gray-200">T</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-green-50">A</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-green-50">B</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-green-50">C</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-green-50 border-r border-gray-200">T</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-yellow-50">A</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-yellow-50">B</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-yellow-50">C</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-yellow-50">T</th>
                     </tr>
                   </thead>
                   <tbody>
                     {placementData.map(row => (
                       <tr key={row.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                        <td className="py-3 px-2 text-center font-medium text-gray-900">{row.id}</td>
-                        <td className="py-3 px-4">
+                        <td className="py-3 px-2 text-center font-medium text-gray-900 border-r border-gray-200">{row.id}</td>
+                        <td className="py-3 px-4 border-r border-gray-200">
                           <input
                             type="text"
                             value={row.department}
@@ -599,7 +672,7 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                                 className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
                               />
                             </td>
-                            <td className="py-3 px-2">
+                            <td className={`py-3 px-2 ${year !== '23-24' ? 'border-r border-gray-200' : ''}`}>
                               <input
                                 type="number"
                                 value={calculatePlacementTotals(row, year)}
@@ -613,7 +686,7 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                     ))}
                   </tbody>
                 </table>
-                <div className="mt-4 text-center">
+                <div className="mt-4 flex justify-center space-x-4">
                   <button
                     type="button"
                     onClick={addPlacementRow}
@@ -621,6 +694,15 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                   >
                     + Add more rows
                   </button>
+                  {placementData.length > initialPlacementData.length && (
+                    <button
+                      type="button"
+                      onClick={removePlacementRow}
+                      className="text-red-600 hover:text-red-700 font-medium transition-colors"
+                    >
+                      - Remove last row
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -636,24 +718,29 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                 <table className="w-full border-collapse text-sm">
                   <thead>
                     <tr className="border-b-2 border-gray-200">
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-gray-50">Sl.No</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-900 bg-gray-50">Department</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-blue-50">25-26 N</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-blue-50">25-26 X</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-blue-50">25-26 % of Y</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-green-50">24-25 N</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-green-50">24-25 X</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-green-50">24-25 % of Y</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-yellow-50">23-24 N</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-yellow-50">23-24 X</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-900 bg-yellow-50">23-24 % of Y</th>
+                      <th rowSpan="2" className="text-center py-3 px-2 font-semibold text-gray-900 bg-gray-50 border-r border-gray-200">Sl.No</th>
+                      <th rowSpan="2" className="text-left py-3 px-4 font-semibold text-gray-900 bg-gray-50 border-r border-gray-200">Department</th>
+                      <th colSpan="3" className="text-center py-3 px-2 font-semibold text-gray-900 bg-blue-50 border-r border-gray-200">25-26</th>
+                      <th colSpan="3" className="text-center py-3 px-2 font-semibold text-gray-900 bg-green-50 border-r border-gray-200">24-25</th>
+                      <th colSpan="3" className="text-center py-3 px-2 font-semibold text-gray-900 bg-yellow-50">23-24</th>
+                    </tr>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-blue-50">N</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-blue-50">X</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-blue-50 border-r border-gray-200">% of Y</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-green-50">N</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-green-50">X</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-green-50 border-r border-gray-200">% of Y</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-yellow-50">N</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-yellow-50">X</th>
+                      <th className="text-center py-2 px-2 font-semibold text-gray-900 bg-yellow-50">% of Y</th>
                     </tr>
                   </thead>
                   <tbody>
                     {placementSummaryData.map(row => (
                       <tr key={row.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                        <td className="py-3 px-2 text-center font-medium text-gray-900">{row.id}</td>
-                        <td className="py-3 px-4">
+                        <td className="py-3 px-2 text-center font-medium text-gray-900 border-r border-gray-200">{row.id}</td>
+                        <td className="py-3 px-4 border-r border-gray-200">
                           <input
                             type="text"
                             value={row.department}
@@ -684,7 +771,7 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                                 className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500 text-sm"
                               />
                             </td>
-                            <td className="py-3 px-2">
+                            <td className={`py-3 px-2 ${year !== '23-24' ? 'border-r border-gray-200' : ''}`}>
                               <input
                                 type="number"
                                 value={calculateSummaryPercent(row[year].n, row[year].x)}
@@ -698,7 +785,7 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                     ))}
                   </tbody>
                 </table>
-                <div className="mt-4 text-center">
+                <div className="mt-4 flex justify-center space-x-4">
                   <button
                     type="button"
                     onClick={addSummaryRow}
@@ -706,6 +793,15 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                   >
                     + Add more rows
                   </button>
+                  {placementSummaryData.length > initialPlacementSummaryData.length && (
+                    <button
+                      type="button"
+                      onClick={removeSummaryRow}
+                      className="text-red-600 hover:text-red-700 font-medium transition-colors"
+                    >
+                      - Remove last row
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -1006,7 +1102,7 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                         <th className="text-left py-3 px-6 font-semibold text-gray-900 bg-gray-50">Name of the University</th>
                         <th className="text-left py-3 px-6 font-semibold text-gray-900 bg-gray-50">Name of the Country</th>
                         <th className="text-left py-3 px-6 font-semibold text-gray-900 bg-gray-50">Valid Upto</th>
-                      </tr>
+                    </tr>
                     </thead>
                     <tbody>
                       {foreignMouData.map(row => (
@@ -1042,7 +1138,7 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                       ))}
                     </tbody>
                   </table>
-                  <div className="mt-4 text-center">
+                  <div className="mt-4 flex justify-center space-x-4">
                     <button
                       type="button"
                       onClick={addForeignMouRow}
@@ -1050,6 +1146,15 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
                     >
                       + Add more rows
                     </button>
+                    {foreignMouData.length > initialForeignMouData.length && (
+                      <button
+                        type="button"
+                        onClick={removeForeignMouRow}
+                        className="text-red-600 hover:text-red-700 font-medium transition-colors"
+                      >
+                        - Remove last row
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

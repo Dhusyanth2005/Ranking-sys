@@ -1,16 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { Check, XCircle, CheckCircle, ExternalLink } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import SectionA from '../components/Section/SectionA/SectionA';
 import SectionB from '../components/Section/SectionB/SectionB';
 import SectionC from '../components/Section/SectionC/SectionC';
 import SectionD from '../components/Section/SectionD/SectionD';
 import SectionE from '../components/Section/SectionE/SectionE';
-// Import your existing SectionA component (placeholder for now
 
 const StepperForm = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
+  
+  // Application status states
+  const [isApplicationOpen, setIsApplicationOpen] = useState(true); // Change to false to test closed state
+  const [isSubmitted, setIsSubmitted] = useState(false); // Change to true to test submitted state
+  
   const [formData, setFormData] = useState({
-    
     institutionName: "",
     yearEstablished: "",
     address: "",
@@ -18,8 +23,8 @@ const StepperForm = () => {
     state: "",
     website: "",
     headName: "",
-    instituteType: [], // Initialize as empty array
-    instituteCategory: [], // Initialize as empty array
+    instituteType: [],
+    instituteCategory: [],
     affiliatedUniversity: "",
     aicteApproval: "",
     nbaAccredited: "",
@@ -84,6 +89,180 @@ const StepperForm = () => {
     setCurrentStep(stepIndex);
   };
 
+  const handleNavigateToSubmissions = () => {
+    navigate('/submissions');
+  };
+
+  // Show "Application Closed" message
+  if (!isApplicationOpen) {
+    return (
+      <div className="stepper-container">
+        <div className="status-message-container">
+          <div className="status-card closed">
+            <XCircle className="status-icon closed-icon" />
+            <h2 className="status-title">Application is Closed</h2>
+            <p className="status-description">
+              The application period has ended. Please check back during the next application cycle.
+            </p>
+          </div>
+        </div>
+        <style jsx>{`
+          .stepper-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f0fdfa 0%, #e6fffa 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+          }
+
+          .status-message-container {
+            width: 100%;
+            max-width: 600px;
+          }
+
+          .status-card {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 2px solid #fee2e2;
+          }
+
+          .status-card.closed {
+            border-color: #fee2e2;
+          }
+
+          .status-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+          }
+
+          .closed-icon {
+            color: #dc2626;
+          }
+
+          .status-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+          }
+
+          .status-description {
+            font-size: 1.125rem;
+            color: #6b7280;
+            line-height: 1.6;
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  // Show "Already Submitted" message
+  if (isSubmitted) {
+    return (
+      <div className="stepper-container">
+        <div className="status-message-container">
+          <div className="status-card submitted">
+            <CheckCircle className="status-icon submitted-icon" />
+            <h2 className="status-title">Application Already Submitted</h2>
+            <p className="status-description">
+              You have already submitted your application. You can view your submission details below.
+            </p>
+            <button 
+              onClick={handleNavigateToSubmissions}
+              className="navigate-button"
+            >
+              View Submissions
+              <ExternalLink className="button-icon" />
+            </button>
+          </div>
+        </div>
+        <style jsx>{`
+          .stepper-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f0fdfa 0%, #e6fffa 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+          }
+
+          .status-message-container {
+            width: 100%;
+            max-width: 600px;
+          }
+
+          .status-card {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+          }
+
+          .status-card.submitted {
+            border: 2px solid #d1fae5;
+          }
+
+          .status-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+          }
+
+          .submitted-icon {
+            color: #10b981;
+          }
+
+          .status-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+          }
+
+          .status-description {
+            font-size: 1.125rem;
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+          }
+
+          .navigate-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #0f766e, #0d9488);
+            color: white;
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
+          }
+
+          .navigate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(15, 118, 110, 0.4);
+          }
+
+          .button-icon {
+            width: 18px;
+            height: 18px;
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  // Show the normal application form
   const CurrentComponent = steps[currentStep].component;
 
   return (
@@ -93,7 +272,7 @@ const StepperForm = () => {
         {steps.map((step, index) => {
           const isActive = index === currentStep;
           const isCompleted = index < currentStep;
-          const isClickable = true; // Allow clicking on any step
+          const isClickable = true;
 
           return (
             <div key={step.id} className="stepper-wrapper">
@@ -217,11 +396,13 @@ const StepperForm = () => {
           width: 20px;
           height: 20px;
         }
+
         .stepper-main {
           max-width: 1500px;
           margin: 0 auto;
           padding: 2rem;
         }
+
         .stepper-content h3 {
           display: none;
         }

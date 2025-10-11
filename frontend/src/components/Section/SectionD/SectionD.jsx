@@ -1,12 +1,95 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Building2 } from "lucide-react";
 
 const SectionD = ({ formData = {}, setFormData, onNext, onBack }) => {
   const [loading, setLoading] = useState(false);
 
+  const initialDeptLibraryData = [
+    { id: 1, department: '', volumes: '' },
+    { id: 2, department: '', volumes: '' },
+    { id: 3, department: '', volumes: '' },
+    { id: 4, department: '', volumes: '' },
+    { id: 5, department: '', volumes: '' },
+  ];
+
+  const initialSportsData = [
+    { id: 1, particular: 'Cricket Ground', area: '' },
+    { id: 2, particular: 'Volley Ball Court', area: '' },
+    { id: 3, particular: 'Basket Ball Court', area: '' },
+  ];
+
+  const [deptLibraryData, setDeptLibraryData] = useState(initialDeptLibraryData);
+  const [sportsData, setSportsData] = useState(initialSportsData);
+  const [hostelData, setHostelData] = useState({
+    boys: { rooms: '', capacity: '', occupied: '' },
+    girls: { rooms: '', capacity: '', occupied: '' },
+  });
+
+  // Calculate hostel totals
+  const calculateHostelTotals = () => {
+    return {
+      rooms: (Number(hostelData.boys.rooms) || 0) + (Number(hostelData.girls.rooms) || 0),
+      capacity: (Number(hostelData.boys.capacity) || 0) + (Number(hostelData.girls.capacity) || 0),
+      occupied: (Number(hostelData.boys.occupied) || 0) + (Number(hostelData.girls.occupied) || 0),
+    };
+  };
+
+  const hostelTotals = calculateHostelTotals();
+
+  // Handlers
+  const handleDeptLibraryChange = (id, field, value) => {
+    setDeptLibraryData(prev =>
+      prev.map(row =>
+        row.id === id ? { ...row, [field]: value } : row
+      )
+    );
+  };
+
+  const addDeptLibraryRow = () => {
+    const newId = Math.max(...deptLibraryData.map(row => row.id), 0) + 1;
+    setDeptLibraryData(prev => [...prev, { id: newId, department: '', volumes: '' }]);
+  };
+
+  const removeDeptLibraryRow = () => {
+    setDeptLibraryData(prev => prev.slice(0, -1));
+  };
+
+  const handleSportsChange = (id, field, value) => {
+    setSportsData(prev =>
+      prev.map(row =>
+        row.id === id ? { ...row, [field]: value } : row
+      )
+    );
+  };
+
+  const addSportsRow = () => {
+    const newId = Math.max(...sportsData.map(row => row.id), 0) + 1;
+    setSportsData(prev => [...prev, { id: newId, particular: '', area: '' }]);
+  };
+
+  const removeSportsRow = () => {
+    setSportsData(prev => prev.slice(0, -1));
+  };
+
+  const handleHostelChange = (gender, field, value) => {
+    setHostelData(prev => ({
+      ...prev,
+      [gender]: { ...prev[gender], [field]: value },
+    }));
+  };
+
+  // Update formData
+  useEffect(() => {
+    setFormData({
+      ...formData,
+      deptLibrary: deptLibraryData,
+      sports: sportsData,
+      hostel: hostelData,
+    });
+  }, [deptLibraryData, sportsData, hostelData, setFormData]);
+
   const handleSubmit = async () => {
     setLoading(true);
-    
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
       alert("Section D submitted successfully");
@@ -110,7 +193,7 @@ const SectionD = ({ formData = {}, setFormData, onNext, onBack }) => {
                 </div>
 
                 <div className="bg-gray-50 p-6 rounded-lg">
-                  <label className="block text-sm font-semibold text-gray-900 mb-3">Does your institute have MoU for waste disposal?</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-3">Does your institute have MoU for Waste disposal?</label>
                   <div className="flex items-center space-x-6">
                     <label className="flex items-center">
                       <input type="radio" name="waste" className="form-radio h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300" />
@@ -277,23 +360,48 @@ const SectionD = ({ formData = {}, setFormData, onNext, onBack }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {[1, 2, 3, 4, 5].map((num) => (
-                      <tr key={num} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                        <td className="py-4 px-4 text-center font-medium text-gray-900">{num}</td>
+                    {deptLibraryData.map(row => (
+                      <tr key={row.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                        <td className="py-4 px-4 text-center font-medium text-gray-900">{row.id}</td>
                         <td className="py-4 px-6">
-                          <input type="text" placeholder="Enter department" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500" />
+                          <input
+                            type="text"
+                            value={row.department}
+                            onChange={(e) => handleDeptLibraryChange(row.id, 'department', e.target.value)}
+                            placeholder="Enter department"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                          />
                         </td>
                         <td className="py-4 px-4">
-                          <input type="number" placeholder="Enter number" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500" />
+                          <input
+                            type="number"
+                            value={row.volumes}
+                            onChange={(e) => handleDeptLibraryChange(row.id, 'volumes', e.target.value)}
+                            placeholder="Enter number"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                          />
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-                <div className="mt-4 text-center">
-                  <button type="button" className="text-teal-600 hover:text-teal-700 font-medium transition-colors">
+                <div className="mt-4 flex justify-center space-x-4">
+                  <button
+                    type="button"
+                    onClick={addDeptLibraryRow}
+                    className="text-teal-600 hover:text-teal-700 font-medium transition-colors"
+                  >
                     + Add more rows if required
                   </button>
+                  {deptLibraryData.length > initialDeptLibraryData.length && (
+                    <button
+                      type="button"
+                      onClick={removeDeptLibraryRow}
+                      className="text-red-600 hover:text-red-700 font-medium transition-colors"
+                    >
+                      - Remove last row
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -321,39 +429,90 @@ const SectionD = ({ formData = {}, setFormData, onNext, onBack }) => {
                       <td className="py-4 px-4 text-center font-medium text-gray-900">1</td>
                       <td className="py-4 px-6 font-medium text-gray-900">Boys</td>
                       <td className="py-4 px-4">
-                        <input type="number" placeholder="Enter number" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500" />
+                        <input
+                          type="number"
+                          value={hostelData.boys.rooms}
+                          onChange={(e) => handleHostelChange('boys', 'rooms', e.target.value)}
+                          placeholder="Enter number"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                        />
                       </td>
                       <td className="py-4 px-4">
-                        <input type="number" placeholder="Enter number" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500" />
+                        <input
+                          type="number"
+                          value={hostelData.boys.capacity}
+                          onChange={(e) => handleHostelChange('boys', 'capacity', e.target.value)}
+                          placeholder="Enter number"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                        />
                       </td>
                       <td className="py-4 px-4">
-                        <input type="number" placeholder="Enter number" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500" />
+                        <input
+                          type="number"
+                          value={hostelData.boys.occupied}
+                          onChange={(e) => handleHostelChange('boys', 'occupied', e.target.value)}
+                          placeholder="Enter number"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                        />
                       </td>
                     </tr>
                     <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
                       <td className="py-4 px-4 text-center font-medium text-gray-900">2</td>
                       <td className="py-4 px-6 font-medium text-gray-900">Girls</td>
                       <td className="py-4 px-4">
-                        <input type="number" placeholder="Enter number" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500" />
+                        <input
+                          type="number"
+                          value={hostelData.girls.rooms}
+                          onChange={(e) => handleHostelChange('girls', 'rooms', e.target.value)}
+                          placeholder="Enter number"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                        />
                       </td>
                       <td className="py-4 px-4">
-                        <input type="number" placeholder="Enter number" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500" />
+                        <input
+                          type="number"
+                          value={hostelData.girls.capacity}
+                          onChange={(e) => handleHostelChange('girls', 'capacity', e.target.value)}
+                          placeholder="Enter number"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                        />
                       </td>
                       <td className="py-4 px-4">
-                        <input type="number" placeholder="Enter number" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500" />
+                        <input
+                          type="number"
+                          value={hostelData.girls.occupied}
+                          onChange={(e) => handleHostelChange('girls', 'occupied', e.target.value)}
+                          placeholder="Enter number"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                        />
                       </td>
                     </tr>
                     <tr className="border-b-2 border-gray-300 bg-teal-50">
                       <td className="py-4 px-4 text-center font-bold text-gray-900">3</td>
                       <td className="py-4 px-6 font-bold text-gray-900">Total</td>
                       <td className="py-4 px-4">
-                        <input type="number" placeholder="Auto-calculated" disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed" />
+                        <input
+                          type="number"
+                          value={hostelTotals.rooms}
+                          disabled
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                        />
                       </td>
                       <td className="py-4 px-4">
-                        <input type="number" placeholder="Auto-calculated" disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed" />
+                        <input
+                          type="number"
+                          value={hostelTotals.capacity}
+                          disabled
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                        />
                       </td>
                       <td className="py-4 px-4">
-                        <input type="number" placeholder="Auto-calculated" disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed" />
+                        <input
+                          type="number"
+                          value={hostelTotals.occupied}
+                          disabled
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                        />
                       </td>
                     </tr>
                   </tbody>
@@ -566,34 +725,49 @@ const SectionD = ({ formData = {}, setFormData, onNext, onBack }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-4 text-center font-medium text-gray-900">1</td>
-                      <td className="py-4 px-6 font-medium text-gray-900">Cricket Ground</td>
-                      <td className="py-4 px-4">
-                        <input type="number" placeholder="Enter area" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500" />
-                      </td>
-                    </tr>
-                    <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-4 text-center font-medium text-gray-900">2</td>
-                      <td className="py-4 px-6 font-medium text-gray-900">Volley Ball Court</td>
-                      <td className="py-4 px-4">
-                        <input type="number" placeholder="Enter area" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500" />
-                      </td>
-                    </tr>
-                    <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-4 text-center font-medium text-gray-900">3</td>
-                      <td className="py-4 px-6 font-medium text-gray-900">Basket Ball Court</td>
-                      <td className="py-4 px-4">
-                        <input type="number" placeholder="Enter area" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500" />
-                      </td>
-                    </tr>
+                    {sportsData.map(row => (
+                      <tr key={row.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                        <td className="py-4 px-4 text-center font-medium text-gray-900">{row.id}</td>
+                        <td className="py-4 px-6">
+                          <input
+                            type="text"
+                            value={row.particular}
+                            onChange={(e) => handleSportsChange(row.id, 'particular', e.target.value)}
+                            placeholder="Enter particulars"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                          />
+                        </td>
+                        <td className="py-4 px-4">
+                          <input
+                            type="number"
+                            value={row.area}
+                            onChange={(e) => handleSportsChange(row.id, 'area', e.target.value)}
+                            placeholder="Enter area"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                          />
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
-              </div>
-              <div className="mt-4 text-center">
-                <button type="button" className="text-teal-600 hover:text-teal-700 font-medium transition-colors">
-                  + Add more rows if required
-                </button>
+                <div className="mt-4 flex justify-center space-x-4">
+                  <button
+                    type="button"
+                    onClick={addSportsRow}
+                    className="text-teal-600 hover:text-teal-700 font-medium transition-colors"
+                  >
+                    + Add more rows if required
+                  </button>
+                  {sportsData.length > initialSportsData.length && (
+                    <button
+                      type="button"
+                      onClick={removeSportsRow}
+                      className="text-red-600 hover:text-red-700 font-medium transition-colors"
+                    >
+                      - Remove last row
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
