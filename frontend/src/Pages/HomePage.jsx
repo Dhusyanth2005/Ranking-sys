@@ -13,7 +13,7 @@ const HomePage = () => {
       <HeroContentSection />
       <StatsSection />
       <RankingCriteriaSection />
-      <TopCollegesSection />
+      {/* <TopCollegesSection /> */}
     </>
   );
 };

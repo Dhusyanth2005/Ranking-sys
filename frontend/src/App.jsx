@@ -3,10 +3,14 @@ import Layout from './layout';
 import Home from './Pages/HomePage';
 import About from './Pages/About';
 import AuthPage from './Pages/AuthPage';
-import PlaceholderPage from './Pages/PlacholderPage';
 import ApplicationForm from './Pages/ApplicationForm';
-import Submissions from './Pages/submissions';
-import SubmissionDetail from './Pages/SubmissionDetails';
+import Submissions from './components/Submission/submissions';
+import SubmissionDetail from './components/Submission/SubmissionDetails';
+import LeaderboardPage from './Pages/LeaderboardPage';
+import FAQPage from './Pages/FaqPage';
+import ContactPage from './Pages/ContactPage';
+import ProfilePage from './Pages/ProfilePage';
+import SettingsPage from './Pages/SettingsPage';
 const App = () => {
   return (
     <Router>
@@ -14,12 +18,14 @@ const App = () => {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/leaderboard" element={<PlaceholderPage route="leaderboard" />} />
+          <Route path="/leaderboard" element={<LeaderboardPage/>} />
+          <Route path="/settings" element={<SettingsPage />} />
           <Route path="/Application" element={<ApplicationForm />} />
-          <Route path="/faqs" element={<PlaceholderPage route="faqs" />} />
+          <Route path="/faqs" element={<FAQPage/>} />
           <Route path="/submission-detail/:id" element={<SubmissionDetail/>} />
+          <Route path="/profile" element={<ProfilePage/>} />
           <Route path="/submissions" element={<Submissions/>} />
-          <Route path="/contact" element={<PlaceholderPage route="contact" />} />
+          <Route path="/contact" element={<ContactPage/>} />
         </Route>
         <Route path='/auth'element={<AuthPage/>}/>
       </Routes>
