@@ -1,3 +1,4 @@
+import { Facebook, Twitter, Linkedin } from 'lucide-react';
 import logodark from '../../assets/logodark.svg';
 
 const Footer = () => {
@@ -14,28 +15,51 @@ const Footer = () => {
               credibility, and fair evaluation for better educational choices.
             </p>
             <div className="flex space-x-4">
-              <div className="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center hover:bg-teal-700 transition-colors cursor-pointer">
-                <span className="text-sm font-bold">f</span>
-              </div>
-              <div className="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center hover:bg-teal-700 transition-colors cursor-pointer">
-                <span className="text-sm font-bold">t</span>
-              </div>
-              <div className="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center hover:bg-teal-700 transition-colors cursor-pointer">
-                <span className="text-sm font-bold">in</span>
-              </div>
+              <a 
+                href="https://facebook.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center hover:bg-teal-700 transition-colors cursor-pointer"
+              >
+                <Facebook size={20} />
+              </a>
+              <a 
+                href="https://twitter.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center hover:bg-teal-700 transition-colors cursor-pointer"
+              >
+                <Twitter size={20} />
+              </a>
+              <a 
+                href="https://linkedin.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center hover:bg-teal-700 transition-colors cursor-pointer"
+              >
+                <Linkedin size={20} />
+              </a>
             </div>
           </div>
           
           <div>
             <h3 className="text-lg font-semibold mb-4 text-teal-400">Quick Links</h3>
             <ul className="space-y-2">
-              {['Home', 'About', 'Leaderboard', 'Submission', 'FAQs', 'Contact'].map((item) => (
-                <li key={item}>
-                  <button 
+              {[
+                { name: 'Home', href: '/' },
+                { name: 'About', href: '/about' },
+                { name: 'Application', href: '/application' },
+                { name: 'Submission', href: '/submission' },
+                { name: 'FAQs', href: '/faqs' },
+                { name: 'Contact', href: '/contact' }
+              ].map((item) => (
+                <li key={item.name}>
+                  <a 
+                    href={item.href}
                     className="text-gray-300 hover:text-teal-400 transition-colors"
                   >
-                    {item}
-                  </button>
+                    {item.name}
+                  </a>
                 </li>
               ))}
             </ul>
@@ -43,11 +67,22 @@ const Footer = () => {
           
           <div>
             <h3 className="text-lg font-semibold mb-4 text-teal-400">Support</h3>
-            <ul className="space-y-2 text-gray-300">
-              <li>Help Center</li>
-              <li>Privacy Policy</li>
-              <li>Terms of Service</li>
-              <li>Methodology</li>
+            <ul className="space-y-2">
+              {[
+                { name: 'Help Center', href: '/contact' },
+                { name: 'Privacy Policy', href: '/privacy-policy' },
+                { name: 'Terms of Service', href: '/terms-of-service' },
+                { name: 'Methodology', href: '/methodology' }
+              ].map((item) => (
+                <li key={item.name}>
+                  <a 
+                    href={item.href}
+                    className="text-gray-300 hover:text-teal-400 transition-colors"
+                  >
+                    {item.name}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </div>

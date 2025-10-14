@@ -1,39 +1,39 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, Trophy, Award, Medal, ExternalLink, ChevronDown, TrendingUp, FileDown } from 'lucide-react';
+import { Search, Filter, ChevronDown, ExternalLink, FileDown } from 'lucide-react';
 
 const LeaderboardPage = () => {
   const [activeTab, setActiveTab] = useState('engineering');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedState, setSelectedState] = useState('all');
-  const [scoreRange, setScoreRange] = useState('all');
-  const [sortBy, setSortBy] = useState('rank');
+  const [bandFilter, setBandFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('name');
   const [showFilters, setShowFilters] = useState(false);
 
   // Sample data
   const engineeringColleges = [
-    { rank: 1, name: 'IIT Madras', state: 'Tamil Nadu', score: 98.5, website: 'https://www.iitm.ac.in' },
-    { rank: 2, name: 'IIT Delhi', state: 'Delhi', score: 97.8, website: 'https://www.iitd.ac.in' },
-    { rank: 3, name: 'IIT Bombay', state: 'Maharashtra', score: 97.2, website: 'https://www.iitb.ac.in' },
-    { rank: 4, name: 'IIT Kanpur', state: 'Uttar Pradesh', score: 95.6, website: 'https://www.iitk.ac.in' },
-    { rank: 5, name: 'IIT Kharagpur', state: 'West Bengal', score: 94.8, website: 'https://www.iitkgp.ac.in' },
-    { rank: 6, name: 'NIT Trichy', state: 'Tamil Nadu', score: 92.3, website: 'https://www.nitt.edu' },
-    { rank: 7, name: 'BITS Pilani', state: 'Rajasthan', score: 91.7, website: 'https://www.bits-pilani.ac.in' },
-    { rank: 8, name: 'IIT Roorkee', state: 'Uttarakhand', score: 90.5, website: 'https://www.iitr.ac.in' },
-    { rank: 9, name: 'IIT Guwahati', state: 'Assam', score: 89.2, website: 'https://www.iitg.ac.in' },
-    { rank: 10, name: 'Anna University', state: 'Tamil Nadu', score: 87.6, website: 'https://www.annauniv.edu' },
+    { name: 'IIT Madras', state: 'Tamil Nadu', band: 'A++', website: 'https://www.iitm.ac.in' },
+    { name: 'IIT Delhi', state: 'Delhi', band: 'A++', website: 'https://www.iitd.ac.in' },
+    { name: 'IIT Bombay', state: 'Maharashtra', band: 'A++', website: 'https://www.iitb.ac.in' },
+    { name: 'IIT Kanpur', state: 'Uttar Pradesh', band: 'A+', website: 'https://www.iitk.ac.in' },
+    { name: 'IIT Kharagpur', state: 'West Bengal', band: 'A+', website: 'https://www.iitkgp.ac.in' },
+    { name: 'NIT Trichy', state: 'Tamil Nadu', band: 'A+', website: 'https://www.nitt.edu' },
+    { name: 'BITS Pilani', state: 'Rajasthan', band: 'A+', website: 'https://www.bits-pilani.ac.in' },
+    { name: 'IIT Roorkee', state: 'Uttarakhand', band: 'A', website: 'https://www.iitr.ac.in' },
+    { name: 'IIT Guwahati', state: 'Assam', band: 'A', website: 'https://www.iitg.ac.in' },
+    { name: 'Anna University', state: 'Tamil Nadu', band: 'A', website: 'https://www.annauniv.edu' },
   ];
 
   const artsColleges = [
-    { rank: 1, name: 'St. Stephen\'s College', state: 'Delhi', score: 96.8, website: 'https://www.ststephens.edu' },
-    { rank: 2, name: 'Loyola College', state: 'Tamil Nadu', score: 95.2, website: 'https://www.loyolacollege.edu' },
-    { rank: 3, name: 'St. Xavier\'s College Mumbai', state: 'Maharashtra', score: 94.5, website: 'https://www.xaviers.edu' },
-    { rank: 4, name: 'Miranda House', state: 'Delhi', score: 93.7, website: 'https://www.mirandahouse.ac.in' },
-    { rank: 5, name: 'Lady Shri Ram College', state: 'Delhi', score: 92.9, website: 'https://www.lsr.edu.in' },
-    { rank: 6, name: 'Hindu College', state: 'Delhi', score: 91.4, website: 'https://www.hinducollege.ac.in' },
-    { rank: 7, name: 'Presidency College', state: 'Tamil Nadu', score: 90.2, website: 'https://www.presidencychennai.ac.in' },
-    { rank: 8, name: 'Christ University', state: 'Karnataka', score: 89.6, website: 'https://www.christuniversity.in' },
-    { rank: 9, name: 'Madras Christian College', state: 'Tamil Nadu', score: 88.3, website: 'https://www.mcc.edu.in' },
-    { rank: 10, name: 'Fergusson College', state: 'Maharashtra', score: 87.1, website: 'https://www.fergusson.edu' },
+    { name: 'St. Stephen\'s College', state: 'Delhi', band: 'A++', website: 'https://www.ststephens.edu' },
+    { name: 'Loyola College', state: 'Tamil Nadu', band: 'A++', website: 'https://www.loyolacollege.edu' },
+    { name: 'St. Xavier\'s College Mumbai', state: 'Maharashtra', band: 'A++', website: 'https://www.xaviers.edu' },
+    { name: 'Miranda House', state: 'Delhi', band: 'A+', website: 'https://www.mirandahouse.ac.in' },
+    { name: 'Lady Shri Ram College', state: 'Delhi', band: 'A+', website: 'https://www.lsr.edu.in' },
+    { name: 'Hindu College', state: 'Delhi', band: 'A+', website: 'https://www.hinducollege.ac.in' },
+    { name: 'Presidency College', state: 'Tamil Nadu', band: 'A', website: 'https://www.presidencychennai.ac.in' },
+    { name: 'Christ University', state: 'Karnataka', band: 'A', website: 'https://www.christuniversity.in' },
+    { name: 'Madras Christian College', state: 'Tamil Nadu', band: 'A', website: 'https://www.mcc.edu.in' },
+    { name: 'Fergusson College', state: 'Maharashtra', band: 'A', website: 'https://www.fergusson.edu' },
   ];
 
   const currentData = activeTab === 'engineering' ? engineeringColleges : artsColleges;
@@ -50,50 +50,31 @@ const LeaderboardPage = () => {
       const matchesSearch = college.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           college.state.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesState = selectedState === 'all' || college.state === selectedState;
-      
-      let matchesScore = true;
-      if (scoreRange === '90+') matchesScore = college.score >= 90;
-      else if (scoreRange === '80-90') matchesScore = college.score >= 80 && college.score < 90;
-      else if (scoreRange === '70-80') matchesScore = college.score >= 70 && college.score < 80;
-      else if (scoreRange === '<70') matchesScore = college.score < 70;
+      const matchesBand = bandFilter === 'all' || college.band === bandFilter;
 
-      return matchesSearch && matchesState && matchesScore;
+      return matchesSearch && matchesState && matchesBand;
     });
 
-    if (sortBy === 'rank') {
-      filtered.sort((a, b) => a.rank - b.rank);
-    } else if (sortBy === 'score') {
-      filtered.sort((a, b) => b.score - a.score);
-    } else if (sortBy === 'name') {
+    if (sortBy === 'name') {
       filtered.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortBy === 'state') {
+      filtered.sort((a, b) => a.state.localeCompare(b.state));
+    } else if (sortBy === 'band') {
+      const bandOrder = { 'A++': 3, 'A+': 2, 'A': 1 };
+      filtered.sort((a, b) => bandOrder[b.band] - bandOrder[a.band]);
     }
 
     return filtered;
-  }, [currentData, searchQuery, selectedState, scoreRange, sortBy]);
+  }, [currentData, searchQuery, selectedState, bandFilter, sortBy]);
 
-  const getRankIcon = (rank) => {
-    if (rank === 1) return <Trophy className="w-5 h-5 text-amber-500" />;
-    if (rank === 2) return <Award className="w-5 h-5 text-slate-400" />;
-    if (rank === 3) return <Medal className="w-5 h-5 text-amber-700" />;
-    return null;
-  };
-
-  const getRankStyle = (rank) => {
-    if (rank === 1) return 'bg-amber-50 border-l-4 border-amber-500';
-    if (rank === 2) return 'bg-slate-50 border-l-4 border-slate-400';
-    if (rank === 3) return 'bg-amber-50 border-l-4 border-amber-700';
-    return 'hover:bg-gray-50';
-  };
-
-  const getScoreColor = (score) => {
-    if (score >= 95) return 'text-teal-700';
-    if (score >= 90) return 'text-teal-600';
-    if (score >= 85) return 'text-teal-500';
-    return 'text-slate-600';
+  const getBandStyle = (band) => {
+    if (band === 'A++') return 'text-yellow-500 font-bold';
+    if (band === 'A+') return 'text-slate-500 font-bold';
+    if (band === 'A') return 'text-amber-700 font-bold';
+    return 'text-gray-700 font-bold';
   };
 
   const handleExportPDF = () => {
-    // PDF export functionality
     alert('Exporting leaderboard as PDF...\nThis will generate a PDF with the current filtered results.');
   };
 
@@ -178,19 +159,18 @@ const LeaderboardPage = () => {
                 </select>
               </div>
 
-              {/* Score Range Filter */}
+              {/* Band Filter */}
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Score Range</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Band</label>
                 <select
-                  value={scoreRange}
-                  onChange={(e) => setScoreRange(e.target.value)}
+                  value={bandFilter}
+                  onChange={(e) => setBandFilter(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-700"
                 >
-                  <option value="all">All Scores</option>
-                  <option value="90+">90 and Above</option>
-                  <option value="80-90">80 - 90</option>
-                  <option value="70-80">70 - 80</option>
-                  <option value="<70">Below 70</option>
+                  <option value="all">All Bands</option>
+                  <option value="A++">A++ (Highest)</option>
+                  <option value="A+">A+</option>
+                  <option value="A">A</option>
                 </select>
               </div>
 
@@ -202,9 +182,9 @@ const LeaderboardPage = () => {
                   onChange={(e) => setSortBy(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-700"
                 >
-                  <option value="rank">Rank</option>
-                  <option value="score">Score (High to Low)</option>
                   <option value="name">Name (A-Z)</option>
+                  <option value="state">State (A-Z)</option>
+                  <option value="band">Band (High to Low)</option>
                 </select>
               </div>
             </div>
@@ -222,22 +202,19 @@ const LeaderboardPage = () => {
             <table className="w-full">
               <thead className="bg-teal-600 text-white">
                 <tr>
-                  <th className="px-6 py-4 text-left font-semibold">Rank</th>
+                  <th className="px-6 py-4 text-left font-semibold">S.No</th>
                   <th className="px-6 py-4 text-left font-semibold">College Name</th>
                   <th className="px-6 py-4 text-left font-semibold">State</th>
-                  <th className="px-6 py-4 text-left font-semibold">Score</th>
+                  <th className="px-6 py-4 text-left font-semibold">Band</th>
                   <th className="px-6 py-4 text-left font-semibold">Website</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredData.length > 0 ? (
-                  filteredData.map((college) => (
-                    <tr key={college.rank} className={getRankStyle(college.rank)}>
+                  filteredData.map((college, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          {getRankIcon(college.rank)}
-                          <span className="font-semibold text-slate-800">#{college.rank}</span>
-                        </div>
+                        <span className="font-semibold text-slate-800">{index + 1}</span>
                       </td>
                       <td className="px-6 py-4">
                         <span className="font-medium text-slate-800">{college.name}</span>
@@ -246,12 +223,9 @@ const LeaderboardPage = () => {
                         <span className="text-slate-600">{college.state}</span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <TrendingUp className={`w-4 h-4 ${getScoreColor(college.score)}`} />
-                          <span className={`font-semibold ${getScoreColor(college.score)}`}>
-                            {college.score}
-                          </span>
-                        </div>
+                        <span className={`text-lg ${getBandStyle(college.band)}`}>
+                          {college.band}
+                        </span>
                       </td>
                       <td className="px-6 py-4">
                         <a

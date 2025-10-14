@@ -43,6 +43,12 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
     '24-25': { total: '', phd: '' },
     '23-24': { total: '', phd: '' },
   });
+  const [additionalAcademicData, setAdditionalAcademicData] = useState({
+  avgTeachingExperience: '',
+  creditsEarned: '',
+  contactHours: '',
+  facultyBelowFeedbackThreshold: '',
+});
   const [placementData, setPlacementData] = useState(initialPlacementData);
   const [placementSummaryData, setPlacementSummaryData] = useState(initialPlacementSummaryData);
   const [mouData, setMouData] = useState({
@@ -229,19 +235,19 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
     setForeignMouData(prev => prev.slice(0, -1));
   };
 
-  // Update formData
-  useEffect(() => {
-    setFormData({
-      ...formData,
-      specialization: specializationData,
-      faculty: facultyData,
-      phd: phdData,
-      placement: placementData,
-      placementSummary: placementSummaryData,
-      mous: mouData,
-      foreignMous: foreignMouData,
-    });
-  }, [specializationData, facultyData, phdData, placementData, placementSummaryData, mouData, foreignMouData, setFormData]);
+useEffect(() => {
+  setFormData({
+    ...formData,
+    specialization: specializationData,
+    faculty: facultyData,
+    phd: phdData,
+    placement: placementData,
+    placementSummary: placementSummaryData,
+    mous: mouData,
+    foreignMous: foreignMouData,
+    additionalAcademic: additionalAcademicData, // Add this line
+  });
+}, [specializationData, facultyData, phdData, placementData, placementSummaryData, mouData, foreignMouData, additionalAcademicData, setFormData]);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -254,7 +260,12 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
       setLoading(false);
     }
   };
-
+const handleAdditionalAcademicChange = (field, value) => {
+  setAdditionalAcademicData(prev => ({
+    ...prev,
+    [field]: value,
+  }));
+};
   const handleNext = () => {
     if (onNext) {
       onNext();
@@ -596,6 +607,63 @@ const SectionC = ({ formData = {}, setFormData, onNext, onBack }) => {
               </div>
             </div>
           </div>
+
+          <div className="bg-white rounded-2xl shadow-xl border border-teal-100 overflow-hidden">
+              <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-8 py-6">
+                <h2 className="text-2xl font-bold text-white mb-2">Additional Academic Information</h2>
+                <p className="text-teal-100">Provide details about faculty experience, credits, and student feedback.</p>
+              </div>
+              <div className="p-8 space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    Average Teaching Experience of Faculty (Permanent Faculty, in years)
+                  </label>
+                  <input
+                    type="number"
+                    value={additionalAcademicData.avgTeachingExperience}
+                    onChange={(e) => handleAdditionalAcademicChange('avgTeachingExperience', e.target.value)}
+                    placeholder="Enter average years"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    Number of Credits Earned by Students (After Completion of Course)
+                  </label>
+                  <input
+                    type="number"
+                    value={additionalAcademicData.creditsEarned}
+                    onChange={(e) => handleAdditionalAcademicChange('creditsEarned', e.target.value)}
+                    placeholder="Enter number of credits"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    Number of Contact Hours Given to the Credits
+                  </label>
+                  <input
+                    type="number"
+                    value={additionalAcademicData.contactHours}
+                    onChange={(e) => handleAdditionalAcademicChange('contactHours', e.target.value)}
+                    placeholder="Enter number of contact hours"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    Number of Faculty Members Scored Below Threshold in Student Feedback (Last AY)
+                  </label>
+                  <input
+                    type="number"
+                    value={additionalAcademicData.facultyBelowFeedbackThreshold}
+                    onChange={(e) => handleAdditionalAcademicChange('facultyBelowFeedbackThreshold', e.target.value)}
+                    placeholder="Enter number of faculty"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+                  />
+                </div>
+              </div>
+            </div>
 
           <div className="bg-white rounded-2xl shadow-xl border border-teal-100 overflow-hidden">
             <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-8 py-6">

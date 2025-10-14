@@ -11,6 +11,9 @@ import FAQPage from './Pages/FaqPage';
 import ContactPage from './Pages/ContactPage';
 import ProfilePage from './Pages/ProfilePage';
 import SettingsPage from './Pages/SettingsPage';
+import PrivacyPolicy from './Pages/PrivacyPolicy';
+import TearmsOfService from './Pages/TearmsOfService';
+import Methodology from './Pages/Methodology';
 const App = () => {
   return (
     <Router>
@@ -26,6 +29,9 @@ const App = () => {
           <Route path="/profile" element={<ProfilePage/>} />
           <Route path="/submissions" element={<Submissions/>} />
           <Route path="/contact" element={<ContactPage/>} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TearmsOfService />} />
+          <Route path='/methodology' element={<Methodology/>}/>
         </Route>
         <Route path='/auth'element={<AuthPage/>}/>
       </Routes>

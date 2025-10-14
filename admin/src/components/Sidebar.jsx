@@ -3,7 +3,8 @@ import {
   LayoutDashboard, 
   Calendar,
   Trophy,
-  Bell, 
+  Bell,
+  ListCheck,
   LogOut, 
   Settings,
   X
@@ -19,6 +20,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
     { id: 'date-year-config', label: 'Date Year Config', icon: Calendar, path: '/date-year-config' },
     { id: 'ranking-management', label: 'Ranking Management', icon: Trophy, path: '/ranking-management' },
+    { id: 'accept-reject-detail', label: 'Accept/Reject Detail', icon: ListCheck, path: '/accept-reject-detail' },
   ];
 
   return (
