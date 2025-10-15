@@ -44,7 +44,6 @@ const CarouselSection = () => {
           </div>
         ))}
       </div>
-
       <div className="relative z-10 h-full flex items-center justify-center">
         <div className="text-center text-white px-4">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">

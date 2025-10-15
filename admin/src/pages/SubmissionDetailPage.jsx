@@ -113,7 +113,7 @@ const SubmissionDetailPage = () => {
         { slNo: 2, department: 'Electrical Engineering', '25-26': { intake: 100, filled: 98, percentage: 98 }, '24-25': { intake: 100, filled: 97, percentage: 97 }, '23-24': { intake: 100, filled: 99, percentage: 99 } }
       ],
       facultyDetails: [
-        { slNo: 1, department: 'Computer Science', '25-26': { prof: 25, asp: 30, ap: 20 }, '24-25': { prof: 24, asp: 28, ap: 22 }, '23-24': { prof: 23, asp: 27, ap: 23 } }
+        { slNo: 1, department: 'Computer Science', intake: '120', '25-26': { prof: 25, asp: 30, ap: 20 }, '24-25': { prof: 24, asp: 28, ap: 22 }, '23-24': { prof: 23, asp: 27, ap: 23 } }
       ],
       phdHolders: [
         { year: '25-26', totalFaculty: 180, phdHolders: 168, percentage: 93.3 },
@@ -127,13 +127,20 @@ const SubmissionDetailPage = () => {
       placementData: [
         { slNo: 1, department: 'Computer Science', '25-26': { a: 110, b: 8, c: 2 }, '24-25': { a: 108, b: 7, c: 3 }, '23-24': { a: 107, b: 6, c: 2 } }
       ],
+      placementSummary: [
+        { slNo: 1, department: 'Computer Science', '25-26': { n: 120, x: 120 }, '24-25': { n: 120, x: 118 }, '23-24': { n: 115, x: 115 } }
+      ],
+      studentContactDetails: [
+        { slNo: 1, nameAndDepartment: 'John Doe, Computer Science', email: 'john.doe@iitm.ac.in' },
+        { slNo: 2, nameAndDepartment: 'Jane Smith, Electrical Engineering', email: 'jane.smith@iitm.ac.in' }
+      ],
       salaryDetails: [
         { particular: 'Highest salary', '24-25': '5500000', '23-24': '5200000', '22-23': '4800000' },
         { particular: 'Lowest salary', '24-25': '800000', '23-24': '750000', '22-23': '700000' },
         { particular: 'Median salary', '24-25': '1800000', '23-24': '1700000', '22-23': '1600000' },
         { particular: 'Mean salary', '24-25': '2100000', '23-24': '2000000', '22-23': '1900000' }
       ],
-      activeMoUs: 125,
+      activeMoUs: { '24-25': 50, '23-24': 40, '22-23': 35 },
       nepImplementation: 'Yes',
       multipleEntryExit: 'Yes',
       interCollegeCompetitions: 25,
@@ -141,7 +148,14 @@ const SubmissionDetailPage = () => {
       clubsSocieties: 42,
       mentorMenteeRatio: '1:8',
       studentCounsellor: 'Yes',
-      foreignLanguageTraining: 'Yes'
+      programsConducted: '10 programs, link: https://iitm.ac.in/programs',
+      hasForeignMoUs: true,
+      foreignMoUs: [
+        { slNo: 1, university: 'MIT', country: 'USA', validUpto: '2026-12-31', link: 'https://www.mit.edu/partners' },
+        { slNo: 2, university: 'Oxford', country: 'UK', validUpto: '2027-06-30', link: 'https://www.ox.ac.uk/partners' }
+      ],
+      foreignLanguageTraining: 'Yes',
+      foreignLanguageCertLink: 'https://iitm.ac.in/foreign-language-certification'
     },
     sectionD: {
       campusArea: '617',
@@ -157,6 +171,7 @@ const SubmissionDetailPage = () => {
       wasteDisposalMoU: 'Yes',
       nss: 'Yes',
       ncc: 'Yes',
+      cellsCommittees: ['Anti-Ragging', 'ICC', 'Grievance Redressal'],
       atm: 'Yes',
       wifi: 'Yes - 1 Gbps',
       iqac: 'Yes',
@@ -177,7 +192,7 @@ const SubmissionDetailPage = () => {
         { type: 'Boys', rooms: 450, capacity: 1800, occupied: 1750 },
         { type: 'Girls', rooms: 200, capacity: 800, occupied: 780 }
       ],
-      facultyQuarters: { quarters: 120, occupied: 115 },
+      facultyQuarters: { details:'detials',quarters: 120, occupied: 115 },
       guestRooms: 25,
       boysCommonRooms: 8,
       girlsCommonRooms: 6,
@@ -190,25 +205,42 @@ const SubmissionDetailPage = () => {
         { facility: 'Basketball Court', area: '600 sq.ft' }
       ]
     },
-    sectionE: {
+     sectionE: {
       journalPublications: [
         { type: 'SCI Indexed', '24-25': 245, '23-24': 230, '22-23': 215 },
         { type: 'SCIE/WoS Indexed', '24-25': 180, '23-24': 165, '22-23': 152 },
         { type: 'Scopus Indexed', '24-25': 320, '23-24': 298, '22-23': 275 }
       ],
       conferencePublications: [
-        { type: 'Scopus Indexed', '24-25': 156, '23-24': 142, '22-23': 128 }
+        { id: 1, particular: 'Scopus Indexed', '24-25': 156, '23-24': 142, '22-23': 128 },
+        { id: 2, particular: 'IEEE Conferences', '24-25': 50, '23-24': 45, '22-23': 40 }
       ],
       patents: [
         { particular: 'Patents Published', '24-25': 45, '23-24': 38, '22-23': 32 },
         { particular: 'Patents Granted', '24-25': 28, '23-24': 22, '22-23': 18 },
+        { particular: 'Percentage', '24-25': '62.2', '23-24': '57.9', '22-23': '56.3' },
         { particular: 'Patents Commercialized', '24-25': 8, '23-24': 6, '22-23': 4 }
       ],
-      researchProjects: { '24-25': 85000000, '23-24': 78000000, '22-23': 72000000 },
-      researchGrants: { '24-25': 12000000, '23-24': 10500000, '22-23': 9500000 },
-      consultancyWorks: { '24-25': 35000000, '23-24': 32000000, '22-23': 28000000 },
-      seedMoney: { '24-25': 5000000, '23-24': 4500000, '22-23': 4000000 },
-      incubationCentres: { '24-25': 3, '23-24': 3, '22-23': 2 }
+      researchProjects: [
+        { id: 1, particular: 'AI Research', '24-25': 50000000, '23-24': 45000000, '22-23': 40000000 },
+        { id: 2, particular: 'Robotics Project', '24-25': 35000000, '23-24': 33000000, '22-23': 32000000 }
+      ],
+      researchGrants: [
+        { id: 1, particular: 'DST Grant', '24-25': 7000000, '23-24': 6500000, '22-23': 6000000 },
+        { id: 2, particular: 'SERB Grant', '24-25': 5000000, '23-24': 4000000, '22-23': 3500000 }
+      ],
+      consultancyWorks: [
+        { id: 1, particular: 'Industry Collaboration', '24-25': 20000000, '23-24': 18000000, '22-23': 16000000 },
+        { id: 2, particular: 'Tech Consulting', '24-25': 15000000, '23-24': 14000000, '22-23': 12000000 }
+      ],
+      seedMoney: [
+        { id: 1, particular: 'Startup Incubation', '24-25': 3000000, '23-24': 2500000, '22-23': 2000000 },
+        { id: 2, particular: 'Faculty Research', '24-25': 2000000, '23-24': 2000000, '22-23': 2000000 }
+      ],
+      incubationCentres: [
+        { particular: 'No. of Centres', '24-25': 3, '23-24': 3, '22-23': 2 },
+        { particular: 'Overall Total', '24-25': 8, '23-24': '', '22-23': '' } // Total spans all years
+      ]
     }
   };
 
@@ -408,6 +440,7 @@ const SubmissionDetailPage = () => {
 
           {/* Section C */}
           <Section title="Section C: Academics" icon={<GraduationCap className="w-6 h-6" />}>
+            {/* Specialization Details - Student Admission */}
             <h3 className="font-semibold text-slate-800 mb-3 text-sm uppercase tracking-wide">Specialization Details - Student Admission</h3>
             <div className="overflow-x-auto mb-6">
               <table className="w-full text-sm">
@@ -437,33 +470,251 @@ const SubmissionDetailPage = () => {
                       <td className="px-4 py-3 text-slate-700 font-medium">{row.department}</td>
                       <td className="px-4 py-3 text-slate-700">{row['25-26'].intake}</td>
                       <td className="px-4 py-3 text-slate-700">{row['25-26'].filled}</td>
-                      <td className="px-4 py-3 text-slate-700">{row['25-26'].percentage}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['25-26'].percentage.toFixed(2)}</td>
                       <td className="px-4 py-3 text-slate-700">{row['24-25'].intake}</td>
                       <td className="px-4 py-3 text-slate-700">{row['24-25'].filled}</td>
-                      <td className="px-4 py-3 text-slate-700">{row['24-25'].percentage}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['24-25'].percentage.toFixed(2)}</td>
                       <td className="px-4 py-3 text-slate-700">{row['23-24'].intake}</td>
                       <td className="px-4 py-3 text-slate-700">{row['23-24'].filled}</td>
-                      <td className="px-4 py-3 text-slate-700">{row['23-24'].percentage}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['23-24'].percentage.toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
-            <h3 className="font-semibold text-slate-800 mb-3 text-sm uppercase tracking-wide">PhD Holders (Permanent Faculty)</h3>
-            <Table headers={['Year', 'Total Faculty', 'PhD Holders', 'Percentage']} data={submissionData.sectionC.phdHolders} />
+            {/* Faculty Details */}
+            <h3 className="font-semibold text-slate-800 mb-3 text-sm uppercase tracking-wide">Faculty Details</h3>
+            <div className="overflow-x-auto mb-6">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-700 border-b text-xs">Department</th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-700 border-b text-xs">Intake</th>
+                    <th colSpan="3" className="px-4 py-3 text-center font-semibold text-slate-700 border-b text-xs">25-26</th>
+                    <th colSpan="3" className="px-4 py-3 text-center font-semibold text-slate-700 border-b text-xs">24-25</th>
+                    <th colSpan="3" className="px-4 py-3 text-center font-semibold text-slate-700 border-b text-xs">23-24</th>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <th className="px-4 py-2 text-left text-xs border-b"></th>
+                    <th className="px-4 py-2 text-left text-xs border-b"></th>
+                    <th className="px-4 py-2 text-left text-xs border-b">Prof</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">ASP</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">AP</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">Prof</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">ASP</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">AP</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">Prof</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">ASP</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">AP</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {submissionData.sectionC.facultyDetails.map((row) => (
+                    <tr key={row.slNo} className="border-b border-gray-100 hover:bg-gray-50">
+                      <td className="px-4 py-3 text-slate-700 font-medium">{row.department}</td>
+                      <td className="px-4 py-3 text-slate-700">{row.intake}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['25-26'].prof}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['25-26'].asp}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['25-26'].ap}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['24-25'].prof}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['24-25'].asp}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['24-25'].ap}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['23-24'].prof}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['23-24'].asp}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['23-24'].ap}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
+            {/* Faculty Totals and V Formula */}
+            <h3 className="font-semibold text-slate-800 mb-3 text-sm uppercase tracking-wide">Faculty Totals and V Formula</h3>
+            <Table
+              headers={['Year', 'Total Professors', 'Total Associate Professors', 'Total Assistant Professors', 'V Formula']}
+              data={[
+                {
+                  Year: '25-26',
+                  'Total Professors': submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['25-26'].prof), 0),
+                  'Total Associate Professors': submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['25-26'].asp), 0),
+                  'Total Assistant Professors': submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['25-26'].ap), 0),
+                  'V Formula': ((3 * submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['25-26'].prof), 0) +
+                    2 * submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['25-26'].asp), 0) +
+                    submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['25-26'].ap), 0)) / 2.5).toFixed(2)
+                },
+                {
+                  Year: '24-25',
+                  'Total Professors': submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['24-25'].prof), 0),
+                  'Total Associate Professors': submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['24-25'].asp), 0),
+                  'Total Assistant Professors': submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['24-25'].ap), 0),
+                  'V Formula': ((3 * submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['24-25'].prof), 0) +
+                    2 * submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['24-25'].asp), 0) +
+                    submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['24-25'].ap), 0)) / 2.5).toFixed(2)
+                },
+                {
+                  Year: '23-24',
+                  'Total Professors': submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['23-24'].prof), 0),
+                  'Total Associate Professors': submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['23-24'].asp), 0),
+                  'Total Assistant Professors': submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['23-24'].ap), 0),
+                  'V Formula': ((3 * submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['23-24'].prof), 0) +
+                    2 * submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['23-24'].asp), 0) +
+                    submissionData.sectionC.facultyDetails.reduce((sum, row) => sum + Number(row['23-24'].ap), 0)) / 2.5).toFixed(2)
+                }
+              ]}
+            />
+
+            {/* PhD Holders */}
+            <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">PhD Holders (Permanent Faculty)</h3>
+            <Table
+              headers={['Year', 'Total Faculty', 'PhD Holders', 'Percentage']}
+              data={submissionData.sectionC.phdHolders.map(row => ({
+                Year: row.year,
+                'Total Faculty': row.totalFaculty,
+                'PhD Holders': row.phdHolders,
+                Percentage: row.percentage.toFixed(2)
+              }))}
+            />
+
+            {/* Faculty Information */}
             <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Faculty Information</h3>
             <DataRow label="Average Teaching Experience" value={submissionData.sectionC.avgTeachingExperience} />
             <DataRow label="Credits Earned by Students" value={submissionData.sectionC.creditsEarned} />
             <DataRow label="Contact Hours" value={submissionData.sectionC.contactHours} />
             <DataRow label="Faculty Below Feedback Threshold" value={submissionData.sectionC.belowThresholdFaculty} />
 
-            <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Placement Salary Details</h3>
-            <Table headers={['Particular', '24-25', '23-24', '22-23']} data={submissionData.sectionC.salaryDetails} />
+            {/* Placement, Higher Education, and Entrepreneurship */}
+            <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Placement(A), Higher Education(B), and Entrepreneurship(C)</h3>
+            <div className="overflow-x-auto mb-6">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-700 border-b text-xs">Department</th>
+                    <th colSpan="4" className="px-4 py-3 text-center font-semibold text-slate-700 border-b text-xs">25-26</th>
+                    <th colSpan="4" className="px-4 py-3 text-center font-semibold text-slate-700 border-b text-xs">24-25</th>
+                    <th colSpan="4" className="px-4 py-3 text-center font-semibold text-slate-700 border-b text-xs">23-24</th>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <th className="px-4 py-2 text-left text-xs border-b"></th>
+                    <th className="px-4 py-2 text-left text-xs border-b">A</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">B</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">C</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">Total</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">A</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">B</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">C</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">Total</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">A</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">B</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">C</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {submissionData.sectionC.placementData.map((row) => (
+                    <tr key={row.slNo} className="border-b border-gray-100 hover:bg-gray-50">
+                      <td className="px-4 py-3 text-slate-700 font-medium">{row.department}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['25-26'].a}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['25-26'].b}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['25-26'].c}</td>
+                      <td className="px-4 py-3 text-slate-700">{Number(row['25-26'].a) + Number(row['25-26'].b) + Number(row['25-26'].c)}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['24-25'].a}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['24-25'].b}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['24-25'].c}</td>
+                      <td className="px-4 py-3 text-slate-700">{Number(row['24-25'].a) + Number(row['24-25'].b) + Number(row['24-25'].c)}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['23-24'].a}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['23-24'].b}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['23-24'].c}</td>
+                      <td className="px-4 py-3 text-slate-700">{Number(row['23-24'].a) + Number(row['23-24'].b) + Number(row['23-24'].c)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
+            {/* Placement Summary */}
+            <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Placement Summary</h3>
+            <div className="overflow-x-auto mb-6">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-700 border-b text-xs">Department</th>
+                    <th colSpan="3" className="px-4 py-3 text-center font-semibold text-slate-700 border-b text-xs">25-26</th>
+                    <th colSpan="3" className="px-4 py-3 text-center font-semibold text-slate-700 border-b text-xs">24-25</th>
+                    <th colSpan="3" className="px-4 py-3 text-center font-semibold text-slate-700 border-b text-xs">23-24</th>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <th className="px-4 py-2 text-left text-xs border-b"></th>
+                    <th className="px-4 py-2 text-left text-xs border-b">N</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">X</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">%</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">N</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">X</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">%</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">N</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">X</th>
+                    <th className="px-4 py-2 text-left text-xs border-b">%</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {submissionData.sectionC.placementSummary.map((row) => (
+                    <tr key={row.slNo} className="border-b border-gray-100 hover:bg-gray-50">
+                      <td className="px-4 py-3 text-slate-700 font-medium">{row.department}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['25-26'].n}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['25-26'].x}</td>
+                      <td className="px-4 py-3 text-slate-700">{((Number(row['25-26'].x) / Number(row['25-26'].n)) * 100).toFixed(2)}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['24-25'].n}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['24-25'].x}</td>
+                      <td className="px-4 py-3 text-slate-700">{((Number(row['24-25'].x) / Number(row['24-25'].n)) * 100).toFixed(2)}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['23-24'].n}</td>
+                      <td className="px-4 py-3 text-slate-700">{row['23-24'].x}</td>
+                      <td className="px-4 py-3 text-slate-700">{((Number(row['23-24'].x) / Number(row['23-24'].n)) * 100).toFixed(2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Student Contact Details */}
+            <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Student Contact Details (Last Passed Out Batch)</h3>
+            <Table
+              headers={['Sl.No', 'Name and Department', 'E-Mail Id']}
+              data={submissionData.sectionC.studentContactDetails.map(row => ({
+                'Sl.No': row.slNo,
+                'Name and Department': row.nameAndDepartment,
+                'E-Mail Id': row.email
+              }))}
+            />
+
+            {/* Placement Salary Details */}
+            <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Placement Salary Details</h3>
+            <Table
+              headers={['Particular', '24-25', '23-24', '22-23']}
+              data={submissionData.sectionC.salaryDetails.map(row => ({
+                Particular: row.particular,
+                '24-25': `₹${Number(row['24-25']).toLocaleString('en-IN')}`,
+                '23-24': `₹${Number(row['23-24']).toLocaleString('en-IN')}`,
+                '22-23': `₹${Number(row['22-23']).toLocaleString('en-IN')}`
+              }))}
+            />
+
+            {/* Active MoUs */}
+            <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Active MoUs</h3>
+            <Table
+              headers={['Year', 'No. of Active MoUs']}
+              data={[
+                { Year: '24-25', 'No. of Active MoUs': submissionData.sectionC.activeMoUs['24-25'] || 0 },
+                { Year: '23-24', 'No. of Active MoUs': submissionData.sectionC.activeMoUs['23-24'] || 0 },
+                { Year: '22-23', 'No. of Active MoUs': submissionData.sectionC.activeMoUs['22-23'] || 0 },
+                {
+                  Year: 'Total',
+                  'No. of Active MoUs': Object.values(submissionData.sectionC.activeMoUs).reduce((sum, val) => sum + Number(val), 0)
+                }
+              ]}
+            />
+
+            {/* Other Academic Details */}
             <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Other Academic Details</h3>
-            <DataRow label="Active MoUs" value={submissionData.sectionC.activeMoUs} />
             <DataRow label="NEP 2020 Implementation" value={submissionData.sectionC.nepImplementation} />
             <DataRow label="Multiple Entry & Exit Scheme" value={submissionData.sectionC.multipleEntryExit} />
             <DataRow label="Inter College Competitions (Last AY)" value={submissionData.sectionC.interCollegeCompetitions} />
@@ -471,7 +722,35 @@ const SubmissionDetailPage = () => {
             <DataRow label="Clubs and Societies" value={submissionData.sectionC.clubsSocieties} />
             <DataRow label="Mentor-Mentee Ratio" value={submissionData.sectionC.mentorMenteeRatio} />
             <DataRow label="Student Counsellor Available" value={submissionData.sectionC.studentCounsellor} />
+            <DataRow label="Programs Conducted (Yoga, etc.)" value={submissionData.sectionC.programsConducted} />
+
+            {/* MoUs with Foreign Universities */}
+            <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">MoUs with Foreign Universities</h3>
+            <DataRow
+              label="MoUs with Foreign Universities"
+              value={submissionData.sectionC.hasForeignMoUs ? 'Yes' : 'No'}
+            />
+            {submissionData.sectionC.hasForeignMoUs && submissionData.sectionC.foreignMoUs?.length > 0 && (
+              <Table
+                headers={['Sl.No', 'University', 'Country', 'Valid Upto', 'Link']}
+                data={submissionData.sectionC.foreignMoUs.map(row => ({
+                  'Sl.No': row.slNo,
+                  University: row.university,
+                  Country: row.country,
+                  'Valid Upto': row.validUpto,
+                  Link: <a href={row.link} className="text-blue-600 hover:underline">Collaboration Details</a>
+                }))}
+              />
+            )}
+
+            {/* Foreign Language Training */}
+            <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Foreign Language Training</h3>
             <DataRow label="Foreign Language Training" value={submissionData.sectionC.foreignLanguageTraining} />
+            <DataRow
+              label="Certificate Details"
+              value={<a href={submissionData.sectionC.foreignLanguageCertLink} className="text-blue-600 hover:underline">View Certification Details</a>}
+            />
+
             <ScoreInput section="sectionC" />
           </Section>
 
@@ -492,6 +771,7 @@ const SubmissionDetailPage = () => {
             <DataRow label="Waste Disposal MoU" value={submissionData.sectionD.wasteDisposalMoU} />
             <DataRow label="NSS Available" value={submissionData.sectionD.nss} />
             <DataRow label="NCC Available" value={submissionData.sectionD.ncc} />
+            <DataRow label="Cells/Committees Available" value={submissionData.sectionD.cellsCommittees?.length > 0 ? submissionData.sectionD.cellsCommittees.join(', ') : 'None'} />
             <DataRow label="ATM on Campus" value={submissionData.sectionD.atm} />
             <DataRow label="Wi-Fi Connectivity" value={submissionData.sectionD.wifi} />
             <DataRow label="IQAC Established" value={`${submissionData.sectionD.iqac} | Date: ${submissionData.sectionD.iqacEstablished}`} />
@@ -507,12 +787,29 @@ const SubmissionDetailPage = () => {
             <DataRow label="Digital Library" value={submissionData.sectionD.digitalLibrary} />
 
             <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Department Libraries</h3>
-            <Table headers={['Department', 'Volumes']} data={submissionData.sectionD.departmentLibrary} />
+            <DataRow
+              label="Department Libraries Available"
+              value={submissionData.sectionD.departmentLibrary?.length > 0 ? 'Yes' : 'No'}
+            />
+            {submissionData.sectionD.departmentLibrary?.length > 0 ? (
+              <Table headers={['Department', 'Volumes']} data={submissionData.sectionD.departmentLibrary} />
+            ) : (
+              <p className="text-slate-600 text-sm">No department libraries available</p>
+            )}
 
             <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Hostel Details</h3>
-            <Table headers={['Type', 'Rooms', 'Capacity', 'Occupied']} data={submissionData.sectionD.hostelDetails} />
+            <DataRow
+              label="Hostel Available"
+              value={submissionData.sectionD.hostelDetails?.length > 0 ? 'Yes' : 'No'}
+            />
+            {submissionData.sectionD.hostelDetails?.length > 0 ? (
+              <Table headers={['Type', 'Rooms', 'Capacity', 'Occupied']} data={submissionData.sectionD.hostelDetails} />
+            ) : (
+              <p className="text-slate-600 text-sm">No hostel facilities available</p>
+            )}
 
             <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Faculty Quarters</h3>
+            <DataRow label="Quarters Details" value={submissionData.sectionD.facultyQuarters.details} />
             <DataRow label="Total Quarters" value={submissionData.sectionD.facultyQuarters.quarters} />
             <DataRow label="Occupied Quarters" value={submissionData.sectionD.facultyQuarters.occupied} />
 
@@ -531,79 +828,153 @@ const SubmissionDetailPage = () => {
             <DataRow label="Sustainable Development" value={submissionData.sectionD.sustainableDevelopment} />
 
             <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Sports Facilities</h3>
-            <Table headers={['Facility', 'Area']} data={submissionData.sectionD.sportsFacilities} />
+            <DataRow
+              label="Sports Facilities Available"
+              value={submissionData.sectionD.sportsFacilities?.length > 0 ? 'Yes' : 'No'}
+            />
+            {submissionData.sectionD.sportsFacilities?.length > 0 ? (
+              <Table headers={['Facility', 'Area']} data={submissionData.sectionD.sportsFacilities} />
+            ) : (
+              <p className="text-slate-600 text-sm">No sports facilities available</p>
+            )}
 
             <ScoreInput section="sectionD" />
           </Section>
 
+
           {/* Section E */}
-          <Section title="Section E: Research" icon={<BookOpen className="w-6 h-6" />}>
-            <h3 className="font-semibold text-slate-800 mb-3 text-sm uppercase tracking-wide">Journal Publications</h3>
-            <Table headers={['Publication Type', '24-25', '23-24', '22-23']} data={submissionData.sectionE.journalPublications} />
+        <Section title="Section E: Research" icon={<BookOpen className="w-6 h-6" />}>
+          <h3 className="font-semibold text-slate-800 mb-3 text-sm uppercase tracking-wide">Journal Publications</h3>
+          <Table
+            headers={['Publication Type', '24-25', '23-24', '22-23']}
+            data={submissionData.sectionE.journalPublications.map(row => ({
+              'Publication Type': row.type,
+              '24-25': row['24-25'],
+              '23-24': row['23-24'],
+              '22-23': row['22-23']
+            }))}
+          />
 
-            <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Conference Publications</h3>
-            <Table headers={['Publication Type', '24-25', '23-24', '22-23']} data={submissionData.sectionE.conferencePublications} />
+          <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Conference/Book Chapters Publications</h3>
+          <Table
+            headers={['Sl.No', 'Particular', '24-25', '23-24', '22-23']}
+            data={submissionData.sectionE.conferencePublications.map(row => ({
+              'Sl.No': row.id,
+              Particular: row.particular,
+              '24-25': row['24-25'],
+              '23-24': row['23-24'],
+              '22-23': row['22-23']
+            }))}
+          />
 
-            <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Patents Details</h3>
-            <Table headers={['Particular', '24-25', '23-24', '22-23']} data={submissionData.sectionE.patents} />
+          <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Patents Details</h3>
+          <Table
+            headers={['Particular', '24-25', '23-24', '22-23']}
+            data={submissionData.sectionE.patents.map(row => ({
+              Particular: row.particular,
+              '24-25': row.particular === 'Percentage' ? `${row['24-25']}%` : row['24-25'],
+              '23-24': row.particular === 'Percentage' ? `${row['23-24']}%` : row['23-24'],
+              '22-23': row.particular === 'Percentage' ? `${row['22-23']}%` : row['22-23']
+            }))}
+          />
 
-            <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Research Funding</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-xs font-semibold text-slate-600 uppercase mb-1">Research Projects (Govt)</p>
-                <p className="text-lg font-semibold text-slate-800">₹ {(submissionData.sectionE.researchProjects['24-25'] / 10000000).toFixed(1)}Cr</p>
-                <p className="text-xs text-slate-500 mt-1">24-25</p>
-              </div>
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-xs font-semibold text-slate-600 uppercase mb-1">Research Grants</p>
-                <p className="text-lg font-semibold text-slate-800">₹ {(submissionData.sectionE.researchGrants['24-25'] / 1000000).toFixed(1)}M</p>
-                <p className="text-xs text-slate-500 mt-1">24-25</p>
-              </div>
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-xs font-semibold text-slate-600 uppercase mb-1">Consultancy Works</p>
-                <p className="text-lg font-semibold text-slate-800">₹ {(submissionData.sectionE.consultancyWorks['24-25'] / 1000000).toFixed(1)}M</p>
-                <p className="text-xs text-slate-500 mt-1">24-25</p>
-              </div>
-            </div>
+          <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Research Projects (Government)</h3>
+          <Table
+            headers={['Sl.No', 'Particular', '24-25 (₹)', '23-24 (₹)', '22-23 (₹)']}
+            data={[
+              ...submissionData.sectionE.researchProjects.map(row => ({
+                'Sl.No': row.id,
+                Particular: row.particular,
+                '24-25 (₹)': `₹${Number(row['24-25']).toLocaleString('en-IN')}`,
+                '23-24 (₹)': `₹${Number(row['23-24']).toLocaleString('en-IN')}`,
+                '22-23 (₹)': `₹${Number(row['22-23']).toLocaleString('en-IN')}`
+              })),
+              {
+                'Sl.No': 'Total',
+                Particular: '',
+                '24-25 (₹)': `₹${submissionData.sectionE.researchProjects.reduce((sum, row) => sum + Number(row['24-25']), 0).toLocaleString('en-IN')}`,
+                '23-24 (₹)': `₹${submissionData.sectionE.researchProjects.reduce((sum, row) => sum + Number(row['23-24']), 0).toLocaleString('en-IN')}`,
+                '22-23 (₹)': `₹${submissionData.sectionE.researchProjects.reduce((sum, row) => sum + Number(row['22-23']), 0).toLocaleString('en-IN')}`
+              }
+            ]}
+          />
 
-            <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Research Funding Details</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-sm font-semibold text-slate-700 mb-2">Research Projects (Govt)</p>
-                <div className="space-y-1 text-sm text-slate-700">
-                  <div className="flex justify-between"><span>24-25:</span><span className="font-medium">₹ {(submissionData.sectionE.researchProjects['24-25'] / 10000000).toFixed(1)}Cr</span></div>
-                  <div className="flex justify-between"><span>23-24:</span><span className="font-medium">₹ {(submissionData.sectionE.researchProjects['23-24'] / 10000000).toFixed(1)}Cr</span></div>
-                  <div className="flex justify-between"><span>22-23:</span><span className="font-medium">₹ {(submissionData.sectionE.researchProjects['22-23'] / 10000000).toFixed(1)}Cr</span></div>
-                </div>
-              </div>
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-sm font-semibold text-slate-700 mb-2">Seed Money</p>
-                <div className="space-y-1 text-sm text-slate-700">
-                  <div className="flex justify-between"><span>24-25:</span><span className="font-medium">₹ {(submissionData.sectionE.seedMoney['24-25'] / 1000000).toFixed(1)}M</span></div>
-                  <div className="flex justify-between"><span>23-24:</span><span className="font-medium">₹ {(submissionData.sectionE.seedMoney['23-24'] / 1000000).toFixed(1)}M</span></div>
-                  <div className="flex justify-between"><span>22-23:</span><span className="font-medium">₹ {(submissionData.sectionE.seedMoney['22-23'] / 1000000).toFixed(1)}M</span></div>
-                </div>
-              </div>
-            </div>
+          <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Research Grants (Government)</h3>
+          <Table
+            headers={['Sl.No', 'Particular', '24-25 (₹)', '23-24 (₹)', '22-23 (₹)']}
+            data={[
+              ...submissionData.sectionE.researchGrants.map(row => ({
+                'Sl.No': row.id,
+                Particular: row.particular,
+                '24-25 (₹)': `₹${Number(row['24-25']).toLocaleString('en-IN')}`,
+                '23-24 (₹)': `₹${Number(row['23-24']).toLocaleString('en-IN')}`,
+                '22-23 (₹)': `₹${Number(row['22-23']).toLocaleString('en-IN')}`
+              })),
+              {
+                'Sl.No': 'Total',
+                Particular: '',
+                '24-25 (₹)': `₹${submissionData.sectionE.researchGrants.reduce((sum, row) => sum + Number(row['24-25']), 0).toLocaleString('en-IN')}`,
+                '23-24 (₹)': `₹${submissionData.sectionE.researchGrants.reduce((sum, row) => sum + Number(row['23-24']), 0).toLocaleString('en-IN')}`,
+                '22-23 (₹)': `₹${submissionData.sectionE.researchGrants.reduce((sum, row) => sum + Number(row['22-23']), 0).toLocaleString('en-IN')}`
+              }
+            ]}
+          />
 
-            <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Incubation Centers</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-xs font-semibold text-slate-600 uppercase mb-1">24-25</p>
-                <p className="text-2xl font-bold text-slate-800">{submissionData.sectionE.incubationCentres['24-25']}</p>
-              </div>
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-xs font-semibold text-slate-600 uppercase mb-1">23-24</p>
-                <p className="text-2xl font-bold text-slate-800">{submissionData.sectionE.incubationCentres['23-24']}</p>
-              </div>
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-xs font-semibold text-slate-600 uppercase mb-1">22-23</p>
-                <p className="text-2xl font-bold text-slate-800">{submissionData.sectionE.incubationCentres['22-23']}</p>
-              </div>
-            </div>
+          <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Consultancy Works</h3>
+          <Table
+            headers={['Sl.No', 'Particular', '24-25 (₹)', '23-24 (₹)', '22-23 (₹)']}
+            data={[
+              ...submissionData.sectionE.consultancyWorks.map(row => ({
+                'Sl.No': row.id,
+                Particular: row.particular,
+                '24-25 (₹)': `₹${Number(row['24-25']).toLocaleString('en-IN')}`,
+                '23-24 (₹)': `₹${Number(row['23-24']).toLocaleString('en-IN')}`,
+                '22-23 (₹)': `₹${Number(row['22-23']).toLocaleString('en-IN')}`
+              })),
+              {
+                'Sl.No': 'Total',
+                Particular: '',
+                '24-25 (₹)': `₹${submissionData.sectionE.consultancyWorks.reduce((sum, row) => sum + Number(row['24-25']), 0).toLocaleString('en-IN')}`,
+                '23-24 (₹)': `₹${submissionData.sectionE.consultancyWorks.reduce((sum, row) => sum + Number(row['23-24']), 0).toLocaleString('en-IN')}`,
+                '22-23 (₹)': `₹${submissionData.sectionE.consultancyWorks.reduce((sum, row) => sum + Number(row['22-23']), 0).toLocaleString('en-IN')}`
+              }
+            ]}
+          />
 
-            <ScoreInput section="sectionE" />
-          </Section>
+          <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Seed Money</h3>
+          <Table
+            headers={['Sl.No', 'Particular', '24-25 (₹)', '23-24 (₹)', '22-23 (₹)']}
+            data={[
+              ...submissionData.sectionE.seedMoney.map(row => ({
+                'Sl.No': row.id,
+                Particular: row.particular,
+                '24-25 (₹)': `₹${Number(row['24-25']).toLocaleString('en-IN')}`,
+                '23-24 (₹)': `₹${Number(row['23-24']).toLocaleString('en-IN')}`,
+                '22-23 (₹)': `₹${Number(row['22-23']).toLocaleString('en-IN')}`
+              })),
+              {
+                'Sl.No': 'Total',
+                Particular: '',
+                '24-25 (₹)': `₹${submissionData.sectionE.seedMoney.reduce((sum, row) => sum + Number(row['24-25']), 0).toLocaleString('en-IN')}`,
+                '23-24 (₹)': `₹${submissionData.sectionE.seedMoney.reduce((sum, row) => sum + Number(row['23-24']), 0).toLocaleString('en-IN')}`,
+                '22-23 (₹)': `₹${submissionData.sectionE.seedMoney.reduce((sum, row) => sum + Number(row['22-23']), 0).toLocaleString('en-IN')}`
+              }
+            ]}
+          />
+
+          <h3 className="font-semibold text-slate-800 mb-3 mt-6 text-sm uppercase tracking-wide">Incubation Centres</h3>
+          <Table
+            headers={['Particular', '24-25', '23-24', '22-23']}
+            data={submissionData.sectionE.incubationCentres.map(row => ({
+              Particular: row.particular,
+              '24-25': row['24-25'],
+              '23-24': row['23-24'],
+              '22-23': row['22-23']
+            }))}
+          />
+
+          <ScoreInput section="sectionE" />
+        </Section>
 
           {/* Review Section */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">

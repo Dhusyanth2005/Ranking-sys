@@ -5,37 +5,32 @@ const RankingCriteriaSection = () => {
     { 
       section: 'A', 
       title: 'General Information', 
-      weight: '15%',
       icon: FileText,
       description: 'Basic institutional data and accreditation'
     },
     { 
       section: 'B', 
-      title: 'Faculty & Research', 
-      weight: '35%',
+      title: 'Diversity & Finance', 
       icon: GraduationCap,
-      description: 'Faculty qualifications, research output and quality'
+      description: 'Diversity metrics, inclusion policies, and financial management'
     },
     { 
       section: 'C', 
+      title: 'Academics', 
+      icon: Users2,
+      description: 'Academic programs, teaching quality, and outcomes'
+    },
+    { 
+      section: 'D', 
       title: 'Infrastructure', 
-      weight: '20%',
       icon: Building,
       description: 'Campus facilities, labs, and learning resources'
     },
     { 
-      section: 'D', 
-      title: 'Student Performance', 
-      weight: '20%',
-      icon: Users2,
-      description: 'Academic outcomes and placement statistics'
-    },
-    { 
       section: 'E', 
-      title: 'Governance', 
-      weight: '10%',
+      title: 'Research', 
       icon: Shield,
-      description: 'Administrative efficiency and transparency'
+      description: 'Research output, innovation, and impact'
     }
   ];
 
@@ -57,7 +52,6 @@ const RankingCriteriaSection = () => {
               </div>
               
               <h3 className="text-lg font-bold text-gray-900 mb-2">{item.title}</h3>
-              <div className="text-2xl font-bold text-teal-600 mb-3">{item.weight}</div>
               <p className="text-sm text-gray-600 leading-relaxed">{item.description}</p>
             </div>
           ))}

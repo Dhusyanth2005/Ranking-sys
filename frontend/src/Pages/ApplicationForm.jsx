@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Check, XCircle, CheckCircle, ExternalLink } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import SectionA from '../components/Section/SectionA/SectionA';
-import SectionB from '../components/Section/SectionB/SectionB';
-import SectionC from '../components/Section/SectionC/SectionC';
-import SectionD from '../components/Section/SectionD/SectionD';
-import SectionE from '../components/Section/SectionE/SectionE';
+import SectionA from '../components/Section/SectionA';
+import SectionB from '../components/Section/SectionB';
+import SectionC from '../components/Section/SectionC';
+import SectionD from '../components/Section/SectionD';
+import SectionE from '../components/Section/SectionE';
+import Payment from '../components/Section/Payment';
 
 const StepperForm = () => {
   const navigate = useNavigate();
@@ -70,6 +71,12 @@ const StepperForm = () => {
       title: 'Documents',
       description: 'Required certificates and attachments',
       component: SectionE
+    },
+    {
+      id: 'F',
+      title: 'Payment',
+      description: 'Application fee payment',
+      component: Payment
     }
   ];
 

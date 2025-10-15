@@ -14,6 +14,7 @@ import SettingsPage from './Pages/SettingsPage';
 import PrivacyPolicy from './Pages/PrivacyPolicy';
 import TearmsOfService from './Pages/TearmsOfService';
 import Methodology from './Pages/Methodology';
+import Payment from './components/Section/Payment';
 const App = () => {
   return (
     <Router>
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TearmsOfService />} />
           <Route path='/methodology' element={<Methodology/>}/>
+          <Route path='/payment' element={<Payment/>}/>
         </Route>
         <Route path='/auth'element={<AuthPage/>}/>
       </Routes>
