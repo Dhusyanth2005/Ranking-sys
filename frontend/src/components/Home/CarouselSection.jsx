@@ -1,19 +1,23 @@
 import { useState, useEffect } from 'react';
+import Rank2 from '../../assets/rank2.jpg';
+import Rank5 from '../../assets/rank5.png';
+import Rank3 from '../../assets/rank3.jpg';
 
 const CarouselSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const heroImages = [
     {
-      url: "https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+      url: Rank5,
       title: "Excellence in Engineering Education"
     },
     {
-      url: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+      url: Rank2,
       title: "Leading Arts & Science Institutions"
     },
+    
     {
-      url: "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+      url: Rank3,
       title: "Research & Innovation Centers"
     }
   ];

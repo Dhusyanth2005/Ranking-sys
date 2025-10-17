@@ -1,38 +1,37 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, ChevronDown, Eye, Calendar, CheckCircle, XCircle } from 'lucide-react';
+import { Search, Filter, ChevronDown, Eye, Calendar, CheckCircle, XCircle, Clock } from 'lucide-react';
 
 const RankManagementPage = () => {
   const [activeTab, setActiveTab] = useState('engineering');
   const [searchQuery, setSearchQuery] = useState('');
-  const [paymentFilter, setPaymentFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
 
   // Sample data for Engineering colleges
   const engineeringSubmissions = [
-    { id: 'ENG001', collegeName: 'IIT Madras', isPaid: true, submittedAt: '2025-03-15 10:30 AM' },
-    { id: 'ENG002', collegeName: 'IIT Delhi', isPaid: true, submittedAt: '2025-03-14 02:45 PM' },
-    { id: 'ENG003', collegeName: 'IIT Bombay', isPaid: false, submittedAt: '2025-03-13 11:20 AM' },
-    { id: 'ENG004', collegeName: 'IIT Kanpur', isPaid: true, submittedAt: '2025-03-12 09:15 AM' },
-    { id: 'ENG005', collegeName: 'NIT Trichy', isPaid: false, submittedAt: '2025-03-11 04:30 PM' },
-    { id: 'ENG006', collegeName: 'BITS Pilani', isPaid: true, submittedAt: '2025-03-10 01:00 PM' },
-    { id: 'ENG007', collegeName: 'IIT Kharagpur', isPaid: true, submittedAt: '2025-03-09 03:45 PM' },
-    { id: 'ENG008', collegeName: 'NIT Warangal', isPaid: false, submittedAt: '2025-03-08 10:20 AM' },
-    { id: 'ENG009', collegeName: 'Anna University', isPaid: true, submittedAt: '2025-03-07 02:30 PM' },
-    { id: 'ENG010', collegeName: 'VIT Vellore', isPaid: false, submittedAt: '2025-03-06 11:45 AM' },
+    { id: 'ENG001', collegeName: 'IIT Madras', status: 'accepted', submittedAt: '2025-03-15 10:30 AM' },
+    { id: 'ENG002', collegeName: 'IIT Delhi', status: 'accepted', submittedAt: '2025-03-14 02:45 PM' },
+    { id: 'ENG003', collegeName: 'IIT Bombay', status: 'pending', submittedAt: '2025-03-13 11:20 AM' },
+    { id: 'ENG004', collegeName: 'IIT Kanpur', status: 'accepted', submittedAt: '2025-03-12 09:15 AM' },
+    { id: 'ENG005', collegeName: 'NIT Trichy', status: 'rejected', submittedAt: '2025-03-11 04:30 PM' },
+    { id: 'ENG006', collegeName: 'BITS Pilani', status: 'accepted', submittedAt: '2025-03-10 01:00 PM' },
+    { id: 'ENG007', collegeName: 'IIT Kharagpur', status: 'accepted', submittedAt: '2025-03-09 03:45 PM' },
+    { id: 'ENG008', collegeName: 'NIT Warangal', status: 'pending', submittedAt: '2025-03-08 10:20 AM' },
+    { id: 'ENG009', collegeName: 'Anna University', status: 'accepted', submittedAt: '2025-03-07 02:30 PM' },
+    { id: 'ENG010', collegeName: 'VIT Vellore', status: 'rejected', submittedAt: '2025-03-06 11:45 AM' },
   ];
 
   // Sample data for Arts & Science colleges
   const artsSubmissions = [
-    { id: 'ART001', collegeName: 'St. Stephen\'s College', isPaid: true, submittedAt: '2025-03-15 09:00 AM' },
-    { id: 'ART002', collegeName: 'Loyola College', isPaid: true, submittedAt: '2025-03-14 03:20 PM' },
-    { id: 'ART003', collegeName: 'St. Xavier\'s College Mumbai', isPaid: false, submittedAt: '2025-03-13 10:15 AM' },
-    { id: 'ART004', collegeName: 'Miranda House', isPaid: true, submittedAt: '2025-03-12 01:45 PM' },
-    { id: 'ART005', collegeName: 'Lady Shri Ram College', isPaid: false, submittedAt: '2025-03-11 11:30 AM' },
-    { id: 'ART006', collegeName: 'Hindu College', isPaid: true, submittedAt: '2025-03-10 04:00 PM' },
-    { id: 'ART007', collegeName: 'Presidency College', isPaid: true, submittedAt: '2025-03-09 09:30 AM' },
-    { id: 'ART008', collegeName: 'Christ University', isPaid: false, submittedAt: '2025-03-08 02:15 PM' },
-    { id: 'ART009', collegeName: 'Madras Christian College', isPaid: true, submittedAt: '2025-03-07 10:45 AM' },
-   
+    { id: 'ART001', collegeName: 'St. Stephen\'s College', status: 'accepted', submittedAt: '2025-03-15 09:00 AM' },
+    { id: 'ART002', collegeName: 'Loyola College', status: 'accepted', submittedAt: '2025-03-14 03:20 PM' },
+    { id: 'ART003', collegeName: 'St. Xavier\'s College Mumbai', status: 'pending', submittedAt: '2025-03-13 10:15 AM' },
+    { id: 'ART004', collegeName: 'Miranda House', status: 'accepted', submittedAt: '2025-03-12 01:45 PM' },
+    { id: 'ART005', collegeName: 'Lady Shri Ram College', status: 'rejected', submittedAt: '2025-03-11 11:30 AM' },
+    { id: 'ART006', collegeName: 'Hindu College', status: 'accepted', submittedAt: '2025-03-10 04:00 PM' },
+    { id: 'ART007', collegeName: 'Presidency College', status: 'accepted', submittedAt: '2025-03-09 09:30 AM' },
+    { id: 'ART008', collegeName: 'Christ University', status: 'pending', submittedAt: '2025-03-08 02:15 PM' },
+    { id: 'ART009', collegeName: 'Madras Christian College', status: 'accepted', submittedAt: '2025-03-07 10:45 AM' },
   ];
 
   const currentData = activeTab === 'engineering' ? engineeringSubmissions : artsSubmissions;
@@ -43,28 +42,28 @@ const RankManagementPage = () => {
       const matchesSearch = submission.collegeName.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           submission.id.toLowerCase().includes(searchQuery.toLowerCase());
       
-      let matchesPayment = true;
-      if (paymentFilter === 'paid') matchesPayment = submission.isPaid;
-      else if (paymentFilter === 'notPaid') matchesPayment = !submission.isPaid;
+      let matchesStatus = true;
+      if (statusFilter !== 'all') matchesStatus = submission.status === statusFilter;
 
-      return matchesSearch && matchesPayment;
+      return matchesSearch && matchesStatus;
     });
 
     return filtered;
-  }, [currentData, searchQuery, paymentFilter]);
+  }, [currentData, searchQuery, statusFilter]);
 
   const handleViewDetail = (id) => {
-    window.location.href = `/submission-detail/${id}`;
+    alert(`Viewing details for ${id}`);
   };
 
-  const getPaymentStats = () => {
+  const getStatusStats = () => {
     const total = currentData.length;
-    const paid = currentData.filter(s => s.isPaid).length;
-    const notPaid = total - paid;
-    return { total, paid, notPaid };
+    const accepted = currentData.filter(s => s.status === 'accepted').length;
+    const rejected = currentData.filter(s => s.status === 'rejected').length;
+    const pending = currentData.filter(s => s.status === 'pending').length;
+    return { total, accepted, rejected, pending };
   };
 
-  const stats = getPaymentStats();
+  const stats = getStatusStats();
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -75,7 +74,7 @@ const RankManagementPage = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -91,8 +90,8 @@ const RankManagementPage = () => {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600 mb-1">Paid</p>
-                <p className="text-2xl font-bold text-green-600">{stats.paid}</p>
+                <p className="text-sm text-slate-600 mb-1">Accepted</p>
+                <p className="text-2xl font-bold text-green-600">{stats.accepted}</p>
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                 <CheckCircle className="w-6 h-6 text-green-600" />
@@ -103,8 +102,20 @@ const RankManagementPage = () => {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600 mb-1">Not Paid</p>
-                <p className="text-2xl font-bold text-red-600">{stats.notPaid}</p>
+                <p className="text-sm text-slate-600 mb-1">Pending</p>
+                <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
+              </div>
+              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                <Clock className="w-6 h-6 text-yellow-600" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-600 mb-1">Rejected</p>
+                <p className="text-2xl font-bold text-red-600">{stats.rejected}</p>
               </div>
               <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
                 <XCircle className="w-6 h-6 text-red-600" />
@@ -167,12 +178,12 @@ const RankManagementPage = () => {
           {showFilters && (
             <div className="pt-4 border-t border-gray-200">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Payment Status</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Status</label>
                 <div className="flex flex-wrap gap-3">
                   <button
-                    onClick={() => setPaymentFilter('all')}
+                    onClick={() => setStatusFilter('all')}
                     className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                      paymentFilter === 'all'
+                      statusFilter === 'all'
                         ? 'bg-teal-600 text-white'
                         : 'bg-gray-100 text-slate-700 hover:bg-gray-200'
                     }`}
@@ -180,24 +191,34 @@ const RankManagementPage = () => {
                     All
                   </button>
                   <button
-                    onClick={() => setPaymentFilter('paid')}
+                    onClick={() => setStatusFilter('accepted')}
                     className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                      paymentFilter === 'paid'
+                      statusFilter === 'accepted'
                         ? 'bg-green-600 text-white'
                         : 'bg-gray-100 text-slate-700 hover:bg-gray-200'
                     }`}
                   >
-                    Paid
+                    Accepted
                   </button>
                   <button
-                    onClick={() => setPaymentFilter('notPaid')}
+                    onClick={() => setStatusFilter('pending')}
                     className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                      paymentFilter === 'notPaid'
+                      statusFilter === 'pending'
+                        ? 'bg-yellow-600 text-white'
+                        : 'bg-gray-100 text-slate-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    Pending
+                  </button>
+                  <button
+                    onClick={() => setStatusFilter('rejected')}
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                      statusFilter === 'rejected'
                         ? 'bg-red-600 text-white'
                         : 'bg-gray-100 text-slate-700 hover:bg-gray-200'
                     }`}
                   >
-                    Not Paid
+                    Rejected
                   </button>
                 </div>
               </div>
@@ -218,7 +239,7 @@ const RankManagementPage = () => {
                 <tr>
                   <th className="px-6 py-4 text-left font-semibold">S.No</th>
                   <th className="px-6 py-4 text-left font-semibold">College Name</th>
-                  <th className="px-6 py-4 text-left font-semibold">Payment Status</th>
+                  <th className="px-6 py-4 text-left font-semibold">Status</th>
                   <th className="px-6 py-4 text-left font-semibold">Submitted At</th>
                   <th className="px-6 py-4 text-left font-semibold">Action</th>
                 </tr>
@@ -237,15 +258,22 @@ const RankManagementPage = () => {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        {submission.isPaid ? (
+                        {submission.status === 'accepted' && (
                           <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
                             <CheckCircle className="w-4 h-4" />
-                            Paid
+                            Accepted
                           </span>
-                        ) : (
+                        )}
+                        {submission.status === 'pending' && (
+                          <span className="inline-flex items-center gap-1 px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">
+                            <Clock className="w-4 h-4" />
+                            Pending
+                          </span>
+                        )}
+                        {submission.status === 'rejected' && (
                           <span className="inline-flex items-center gap-1 px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
                             <XCircle className="w-4 h-4" />
-                            Not Paid
+                            Rejected
                           </span>
                         )}
                       </td>

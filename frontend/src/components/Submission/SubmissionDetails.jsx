@@ -1,5 +1,5 @@
 import { ArrowLeft, Building2, Users, GraduationCap, Home, BookOpen,Download } from 'lucide-react';
-
+import generateSubmissionPDF from '../../utils/generateSubmissionPDF';
 const SubmissionDetailPage = () => {
   
   const submissionData = {
@@ -272,7 +272,7 @@ const SubmissionDetailPage = () => {
                 <p className="text-teal-50 text-sm">Submission ID: {submissionData.id} | Submitted: {submissionData.submittedAt}</p>
               </div>
               <button
-                onClick={() => {/* Add PDF export logic */}}
+                onClick={() => generateSubmissionPDF(submissionData)}
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-teal-700 rounded-lg font-medium text-sm hover:bg-teal-50 transition-colors"
               >
                 <Download className="w-4 h-4" />

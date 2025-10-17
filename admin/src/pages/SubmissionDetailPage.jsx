@@ -286,7 +286,7 @@ const SubmissionDetailPage = () => {
     </div>
   );
 
-  const ScoreInput = ({ section, maxScore = 20 }) => {
+const ScoreInput = ({ section, maxScore = 20 }) => {
     const [tempScore, setTempScore] = useState('');
     const currentScore = scores[section];
 
@@ -299,8 +299,8 @@ const SubmissionDetailPage = () => {
     };
 
     return (
-      <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-        <label className="block text-sm font-semibold text-slate-700 mb-3">
+      <div className="mt-6 p-4 bg-teal-50 rounded-lg border border-teal-200">
+        <label className="block text-sm font-semibold text-teal-900 mb-3">
           {section.replace(/([A-Z])/g, ' $1').trim()} Score (out of {maxScore})
         </label>
         <div className="flex gap-2 items-center">
@@ -320,26 +320,26 @@ const SubmissionDetailPage = () => {
               }
             }}
             onWheel={(e) => e.preventDefault()}
-            className="w-full md:w-32 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300"
+            className="w-full md:w-32 px-4 py-2 border border-teal-300 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-200"
             placeholder="0"
           />
           <button
             onClick={handleSubmit}
-            className="px-4 py-2 bg-slate-600 text-white font-semibold rounded-lg hover:bg-slate-700 transition-colors"
+            className="px-4 py-2 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition-colors"
             aria-label={`Submit score for ${section}`}
           >
             Submit Score
           </button>
           <button
             onClick={() => setTempScore('')}
-            className="px-4 py-2 bg-slate-200 text-slate-800 font-semibold rounded-lg hover:bg-slate-300 transition-colors"
+            className="px-4 py-2 bg-white text-teal-700 font-semibold rounded-lg hover:bg-teal-50 transition-colors border border-teal-300"
             aria-label={`Clear score for ${section}`}
           >
             Clear
           </button>
         </div>
         {currentScore && (
-          <p className="mt-2 text-sm text-slate-600">Current Score: {currentScore}/{maxScore}</p>
+          <p className="mt-2 text-sm text-teal-700 font-medium">Current Score: {currentScore}/{maxScore}</p>
         )}
       </div>
     );
@@ -361,36 +361,38 @@ const SubmissionDetailPage = () => {
           `}
         </style>
         <div className="max-w-7xl mx-auto px-4 py-8">
-          {/* Header with Back Button */}
+         {/* Header with Back Button */}
           <div className="flex items-center gap-3 mb-8">
             <button
               onClick={() => window.history.back()}
-              className="p-2 hover:bg-white rounded-lg transition-colors border border-gray-200"
+              className="p-2 hover:bg-teal-50 rounded-lg transition-colors border border-teal-200"
               aria-label="Back to ranking management"
             >
-              <ArrowLeft className="w-5 h-5 text-slate-600" />
+              <ArrowLeft className="w-5 h-5 text-teal-700" />
             </button>
-            <span className="text-slate-500 text-sm font-medium">back to ranking management ('/ranking-management')</span>
+            <span className="text-teal-700 text-sm font-medium">back to ranking management</span>
           </div>
 
           {/* Main Header */}
-          <div className="flex items-start justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900 mb-2">{submissionData.collegeName}</h1>
-              <p className="text-slate-600 text-sm">Submission ID: {submissionData.id} | Submitted: {submissionData.submittedAt}</p>
-            </div>
-            <div>
-              {submissionData.isPaid ? (
-                <span className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-slate-700 rounded-lg font-medium text-sm border border-gray-200">
-                  <CheckCircle className="w-4 h-4" />
-                  Fee Paid
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-slate-700 rounded-lg font-medium text-sm border border-gray-200">
-                  <XCircle className="w-4 h-4" />
-                  Pending Payment
-                </span>
-              )}
+          <div className="bg-gradient-to-br from-teal-600 to-teal-700 rounded-xl p-8 shadow-sm mb-8">
+            <div className="flex items-start justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-white mb-2">{submissionData.collegeName}</h1>
+                <p className="text-teal-50 text-sm">Submission ID: {submissionData.id} | Submitted: {submissionData.submittedAt}</p>
+              </div>
+              <div>
+                {submissionData.isPaid ? (
+                  <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg font-medium text-sm border border-white/30">
+                    <CheckCircle className="w-4 h-4" />
+                    Fee Paid
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg font-medium text-sm border border-white/30">
+                    <XCircle className="w-4 h-4" />
+                    Pending Payment
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -976,37 +978,37 @@ const SubmissionDetailPage = () => {
           <ScoreInput section="sectionE" />
         </Section>
 
-          {/* Review Section */}
+{/* Review Section */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
             <h2 className="text-xl font-semibold text-slate-800 mb-6 pb-4 border-b border-gray-200">Admin Review & Scoring</h2>
             
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-xs font-semibold text-slate-600 uppercase mb-2">Section A</p>
-                <p className="text-lg font-bold text-slate-800">{scores.sectionA || '-'}/20</p>
+              <div className="p-4 bg-teal-50 rounded-lg border border-teal-200">
+                <p className="text-xs font-semibold text-teal-700 uppercase mb-2">Section A</p>
+                <p className="text-lg font-bold text-teal-900">{scores.sectionA || '-'}/20</p>
               </div>
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-xs font-semibold text-slate-600 uppercase mb-2">Section B</p>
-                <p className="text-lg font-bold text-slate-800">{scores.sectionB || '-'}/20</p>
+              <div className="p-4 bg-teal-50 rounded-lg border border-teal-200">
+                <p className="text-xs font-semibold text-teal-700 uppercase mb-2">Section B</p>
+                <p className="text-lg font-bold text-teal-900">{scores.sectionB || '-'}/20</p>
               </div>
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-xs font-semibold text-slate-600 uppercase mb-2">Section C</p>
-                <p className="text-lg font-bold text-slate-800">{scores.sectionC || '-'}/20</p>
+              <div className="p-4 bg-teal-50 rounded-lg border border-teal-200">
+                <p className="text-xs font-semibold text-teal-700 uppercase mb-2">Section C</p>
+                <p className="text-lg font-bold text-teal-900">{scores.sectionC || '-'}/20</p>
               </div>
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-xs font-semibold text-slate-600 uppercase mb-2">Section D</p>
-                <p className="text-lg font-bold text-slate-800">{scores.sectionD || '-'}/20</p>
+              <div className="p-4 bg-teal-50 rounded-lg border border-teal-200">
+                <p className="text-xs font-semibold text-teal-700 uppercase mb-2">Section D</p>
+                <p className="text-lg font-bold text-teal-900">{scores.sectionD || '-'}/20</p>
               </div>
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-xs font-semibold text-slate-600 uppercase mb-2">Section E</p>
-                <p className="text-lg font-bold text-slate-800">{scores.sectionE || '-'}/20</p>
+              <div className="p-4 bg-teal-50 rounded-lg border border-teal-200">
+                <p className="text-xs font-semibold text-teal-700 uppercase mb-2">Section E</p>
+                <p className="text-lg font-bold text-teal-900">{scores.sectionE || '-'}/20</p>
               </div>
             </div>
 
             {Object.values(scores).every((s) => s !== '') && (
-              <div className="p-4 bg-slate-50 rounded-lg border-2 border-slate-200 mb-8">
-                <p className="text-sm font-semibold text-slate-600 uppercase mb-1">Overall Score</p>
-                <p className="text-4xl font-bold text-slate-800">{(Object.values(scores).reduce((sum, score) => sum + (parseFloat(score) || 0), 0)).toFixed(2)}/100</p>
+              <div className="p-5 bg-gradient-to-br from-teal-600 to-teal-700 rounded-lg mb-8">
+                <p className="text-sm font-semibold text-teal-100 uppercase mb-1">Overall Score</p>
+                <p className="text-4xl font-bold text-white">{(Object.values(scores).reduce((sum, score) => sum + (parseFloat(score) || 0), 0)).toFixed(2)}/100</p>
               </div>
             )}
 
@@ -1015,7 +1017,7 @@ const SubmissionDetailPage = () => {
               <textarea
                 value={comments}
                 onChange={(e) => setComments(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-200"
                 rows="4"
                 placeholder="Add review comments here..."
               />
@@ -1024,7 +1026,7 @@ const SubmissionDetailPage = () => {
             <div className="flex gap-4">
               <button
                 onClick={() => handleSubmitReview('accepted')}
-                className="flex-1 px-6 py-3 bg-slate-800 text-white font-semibold rounded-lg hover:bg-slate-700 transition-colors flex items-center justify-center gap-2"
+                className="flex-1 px-6 py-3 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition-colors flex items-center justify-center gap-2"
                 aria-label="Accept submission"
               >
                 <CheckCircle className="w-5 h-5" />
@@ -1032,7 +1034,7 @@ const SubmissionDetailPage = () => {
               </button>
               <button
                 onClick={() => handleSubmitReview('rejected')}
-                className="flex-1 px-6 py-3 bg-slate-200 text-slate-800 font-semibold rounded-lg hover:bg-slate-300 transition-colors flex items-center justify-center gap-2"
+                className="flex-1 px-6 py-3 bg-white text-slate-700 font-semibold rounded-lg hover:bg-slate-50 transition-colors flex items-center justify-center gap-2 border border-gray-300"
                 aria-label="Reject submission"
               >
                 <XCircle className="w-5 h-5" />
@@ -1040,7 +1042,6 @@ const SubmissionDetailPage = () => {
               </button>
             </div>
           </div>
-
           {/* Footer */}
           <div className="text-center text-sm text-slate-500 py-8">
             <p>Review all sections carefully before submitting your decision</p>

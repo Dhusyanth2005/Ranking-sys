@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { Calendar, Settings, Save, X, Plus, Trash2 } from 'lucide-react';
 
-const DateYearConfiguration = () => {
+const Configuration = () => {
   const [applicationDates, setApplicationDates] = useState({
     openDate: '2025-01-15',
     closeDate: '2025-06-30'
+  });
+
+  const [paymentConfig, setPaymentConfig] = useState({
+    upiId: '',
+    amount: ''
   });
 
   const [yearConfigs, setYearConfigs] = useState([
@@ -23,6 +28,13 @@ const DateYearConfiguration = () => {
 
   const handleDateChange = (field, value) => {
     setApplicationDates(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handlePaymentChange = (field, value) => {
+    setPaymentConfig(prev => ({
       ...prev,
       [field]: value
     }));
@@ -106,6 +118,64 @@ const DateYearConfiguration = () => {
           <button className="mt-6 flex items-center gap-2 bg-gradient-to-r from-teal-600 to-cyan-500 text-white px-6 py-3 rounded-lg hover:shadow-lg transition-shadow font-semibold">
             <Save size={20} />
             Save Application Dates
+          </button>
+        </div>
+
+        {/* Payment Configuration Section */}
+        <div className="bg-white rounded-xl shadow-md p-8 border border-slate-200 mb-8">
+          <div className="flex items-center gap-2 mb-6">
+            <Settings className="text-teal-600" size={28} />
+            <h2 className="text-2xl font-bold text-slate-900">Payment Configuration</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* UPI ID */}
+            <div>
+              <label className="block text-sm font-semibold text-slate-900 mb-3">
+                UPI ID
+              </label>
+              <input
+                type="text"
+                value={paymentConfig.upiId}
+                onChange={(e) => handlePaymentChange('upiId', e.target.value)}
+                placeholder="example@upi"
+                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              />
+              <p className="text-sm text-slate-600 mt-2">
+                Enter the UPI ID for payment collection
+              </p>
+            </div>
+
+            {/* Amount */}
+            <div>
+              <label className="block text-sm font-semibold text-slate-900 mb-3">
+                Amount (₹)
+              </label>
+              <input
+                type="number"
+                value={paymentConfig.amount}
+                onChange={(e) => handlePaymentChange('amount', e.target.value)}
+                placeholder="0"
+                min="0"
+                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              />
+              <p className="text-sm text-slate-600 mt-2">
+                Application fee amount in Indian Rupees
+              </p>
+            </div>
+          </div>
+
+          {paymentConfig.upiId && paymentConfig.amount && (
+            <div className="mt-6 p-4 bg-teal-50 border border-teal-200 rounded-lg">
+              <p className="text-sm text-teal-900">
+                <span className="font-semibold">Payment Summary:</span> ₹{paymentConfig.amount} will be collected via UPI ID: {paymentConfig.upiId}
+              </p>
+            </div>
+          )}
+
+          <button className="mt-6 flex items-center gap-2 bg-gradient-to-r from-teal-600 to-cyan-500 text-white px-6 py-3 rounded-lg hover:shadow-lg transition-shadow font-semibold">
+            <Save size={20} />
+            Save Payment Configuration
           </button>
         </div>
 
@@ -275,4 +345,4 @@ const DateYearConfiguration = () => {
   );
 };
 
-export default DateYearConfiguration;
+export default Configuration;

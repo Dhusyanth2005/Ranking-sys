@@ -3,10 +3,7 @@ import {
   LayoutDashboard, 
   Calendar,
   Trophy,
-  Bell,
-  ListCheck,
-  LogOut, 
-  Settings,
+  LogOut,
   X
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -18,9 +15,8 @@ const Sidebar = ({ isOpen, onToggle }) => {
   
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
-    { id: 'date-year-config', label: 'Date Year Config', icon: Calendar, path: '/date-year-config' },
-    { id: 'ranking-management', label: 'Ranking Management', icon: Trophy, path: '/ranking-management' },
-    { id: 'accept-reject-detail', label: 'Accept/Reject Detail', icon: ListCheck, path: '/accept-reject-detail' },
+    { id: 'configuration', label: 'Configuration', icon: Calendar, path: '/configuration' },
+    { id: 'ranking-management', label: 'Ranking Management', icon: Trophy, path: '/ranking-management' }
   ];
 
   return (
