@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { Search, Filter, ChevronDown, Eye, Calendar, CheckCircle, XCircle, Clock } from 'lucide-react';
-
+import {useNavigate} from 'react-router-dom';
 const RankManagementPage = () => {
   const [activeTab, setActiveTab] = useState('engineering');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
-
+  const navigate=useNavigate();
   // Sample data for Engineering colleges
   const engineeringSubmissions = [
     { id: 'ENG001', collegeName: 'IIT Madras', status: 'accepted', submittedAt: '2025-03-15 10:30 AM' },
@@ -52,7 +52,7 @@ const RankManagementPage = () => {
   }, [currentData, searchQuery, statusFilter]);
 
   const handleViewDetail = (id) => {
-    alert(`Viewing details for ${id}`);
+    navigate(`/submission-detail/${id}`);
   };
 
   const getStatusStats = () => {
