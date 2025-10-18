@@ -37,9 +37,9 @@ const ContactPage = () => {
     setError(false);
 
    // EmailJS configuration
-    const serviceId = 'service_u6bdvw9'; // Replace with your EmailJS service ID
-    const templateId = 'template_xobjrz1'; // Replace with your EmailJS template ID
-    const publicKey = 'PD-ixnGHTns3GAt3v'; // Replace with your EmailJS public key
+    const serviceId = 'service_8xuqe3m'; // Replace with your EmailJS service ID
+    const templateId = 'template_ganc9r5'; // Replace with your EmailJS template ID
+    const publicKey = 'N7Qb5_RYrU71VN3TK'; // Replace with your EmailJS public key
 
     const templateParams = {
       to_email: 'sdhusyanth20@gmail.com',
