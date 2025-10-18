@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, ChevronDown, ExternalLink, FileDown } from 'lucide-react';
+import { Search, Filter, ChevronDown, ExternalLink, FileDown, FileSpreadsheet } from 'lucide-react';
 
 const LeaderboardPage = () => {
   const [activeTab, setActiveTab] = useState('engineering');
@@ -8,6 +8,7 @@ const LeaderboardPage = () => {
   const [bandFilter, setBandFilter] = useState('all');
   const [sortBy, setSortBy] = useState('name');
   const [showFilters, setShowFilters] = useState(false);
+  const [isRankingReleased, setIsRankingReleased] = useState(false);
 
   // Sample data
   const engineeringColleges = [
@@ -75,7 +76,97 @@ const LeaderboardPage = () => {
   };
 
   const handleExportPDF = () => {
-    alert('Exporting leaderboard as PDF...\nThis will generate a PDF with the current filtered results.');
+    // Create PDF content
+    const title = `${activeTab === 'engineering' ? 'Engineering' : 'Arts & Science'} Colleges Leaderboard`;
+    const date = new Date().toLocaleDateString();
+    
+    let pdfContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>${title}</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 40px; }
+    h1 { color: #0d9488; text-align: center; margin-bottom: 10px; }
+    .date { text-align: center; color: #666; margin-bottom: 30px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th { background-color: #0d9488; color: white; padding: 12px; text-align: left; }
+    td { padding: 10px; border-bottom: 1px solid #ddd; }
+    tr:hover { background-color: #f9fafb; }
+    .band-a-plus-plus { color: #eab308; font-weight: bold; }
+    .band-a-plus { color: #64748b; font-weight: bold; }
+    .band-a { color: #b45309; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>${title}</h1>
+  <div class="date">Generated on: ${date}</div>
+  <table>
+    <thead>
+      <tr>
+        <th>S.No</th>
+        <th>College Name</th>
+        <th>State</th>
+        <th>Band</th>
+        <th>Website</th>
+      </tr>
+    </thead>
+    <tbody>
+`;
+
+    filteredData.forEach((college, index) => {
+      const bandClass = college.band === 'A++' ? 'band-a-plus-plus' : 
+                        college.band === 'A+' ? 'band-a-plus' : 'band-a';
+      pdfContent += `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${college.name}</td>
+        <td>${college.state}</td>
+        <td class="${bandClass}">${college.band}</td>
+        <td>${college.website}</td>
+      </tr>`;
+    });
+
+    pdfContent += `
+    </tbody>
+  </table>
+</body>
+</html>`;
+
+    // Create blob and download
+    const blob = new Blob([pdfContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${activeTab}_colleges_leaderboard_${date.replace(/\//g, '-')}.html`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleExportExcel = () => {
+    const title = `${activeTab === 'engineering' ? 'Engineering' : 'Arts & Science'} Colleges Leaderboard`;
+    const date = new Date().toLocaleDateString();
+    
+    // Create CSV content
+    let csvContent = `${title}\nGenerated on: ${date}\n\n`;
+    csvContent += 'S.No,College Name,State,Band,Website\n';
+    
+    filteredData.forEach((college, index) => {
+      csvContent += `${index + 1},"${college.name}","${college.state}","${college.band}","${college.website}"\n`;
+    });
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${activeTab}_colleges_leaderboard_${date.replace(/\//g, '-')}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -105,156 +196,182 @@ const LeaderboardPage = () => {
           </button>
         </div>
 
-        {/* Search and Filters */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <div className="flex flex-col md:flex-row gap-4 mb-4">
-            {/* Search */}
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search colleges or states..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-700"
-              />
+        {!isRankingReleased ? (
+          // Ranking Not Released Message
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center">
+                <Filter className="w-10 h-10 text-teal-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-slate-800">Rankings Not Released</h2>
+              <p className="text-slate-600 max-w-md">
+                The college rankings are not available yet. Please check back later for the updated leaderboard.
+              </p>
             </div>
-
-            {/* Export PDF Button */}
-            <button
-              onClick={handleExportPDF}
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 font-medium transition-colors"
-            >
-              <FileDown className="w-5 h-5" />
-              Export PDF
-            </button>
-
-            {/* Filter Toggle */}
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-slate-700 font-medium"
-            >
-              <Filter className="w-5 h-5" />
-              Filters
-              <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
-            </button>
           </div>
+        ) : (
+          // Leaderboard Content
+          <>
+            {/* Search and Filters */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+              <div className="flex flex-col md:flex-row gap-4 mb-4">
+                {/* Search */}
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder="Search colleges or states..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-700"
+                  />
+                </div>
 
-          {/* Filter Options */}
-          {showFilters && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-gray-200">
-              {/* State Filter */}
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">State</label>
-                <select
-                  value={selectedState}
-                  onChange={(e) => setSelectedState(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-700"
+                {/* Export Buttons */}
+                <button
+                  onClick={handleExportExcel}
+                  className="flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors"
                 >
-                  {states.map(state => (
-                    <option key={state} value={state}>
-                      {state === 'all' ? 'All States' : state}
-                    </option>
-                  ))}
-                </select>
+                  <FileSpreadsheet className="w-5 h-5" />
+                  Export Excel
+                </button>
+
+                <button
+                  onClick={handleExportPDF}
+                  className="flex items-center justify-center gap-2 px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 font-medium transition-colors"
+                >
+                  <FileDown className="w-5 h-5" />
+                  Export PDF
+                </button>
+
+                {/* Filter Toggle */}
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-slate-700 font-medium"
+                >
+                  <Filter className="w-5 h-5" />
+                  Filters
+                  <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+                </button>
               </div>
 
-              {/* Band Filter */}
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Band</label>
-                <select
-                  value={bandFilter}
-                  onChange={(e) => setBandFilter(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-700"
-                >
-                  <option value="all">All Bands</option>
-                  <option value="A++">A++ (Highest)</option>
-                  <option value="A+">A+</option>
-                  <option value="A">A</option>
-                </select>
-              </div>
+              {/* Filter Options */}
+              {showFilters && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-gray-200">
+                  {/* State Filter */}
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">State</label>
+                    <select
+                      value={selectedState}
+                      onChange={(e) => setSelectedState(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-700"
+                    >
+                      {states.map(state => (
+                        <option key={state} value={state}>
+                          {state === 'all' ? 'All States' : state}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-              {/* Sort By */}
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Sort By</label>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-700"
-                >
-                  <option value="name">Name (A-Z)</option>
-                  <option value="state">State (A-Z)</option>
-                  <option value="band">Band (High to Low)</option>
-                </select>
-              </div>
+                  {/* Band Filter */}
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">Band</label>
+                    <select
+                      value={bandFilter}
+                      onChange={(e) => setBandFilter(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-700"
+                    >
+                      <option value="all">All Bands</option>
+                      <option value="A++">A++ (Highest)</option>
+                      <option value="A+">A+</option>
+                      <option value="A">A</option>
+                    </select>
+                  </div>
+
+                  {/* Sort By */}
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">Sort By</label>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-700"
+                    >
+                      <option value="name">Name (A-Z)</option>
+                      <option value="state">State (A-Z)</option>
+                      <option value="band">Band (High to Low)</option>
+                    </select>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
-        {/* Results Count */}
-        <div className="mb-4 text-slate-600 font-medium">
-          Showing {filteredData.length} of {currentData.length} colleges
-        </div>
+            {/* Results Count */}
+            <div className="mb-4 text-slate-600 font-medium">
+              Showing {filteredData.length} of {currentData.length} colleges
+            </div>
 
-        {/* Leaderboard Table */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-teal-600 text-white">
-                <tr>
-                  <th className="px-6 py-4 text-left font-semibold">S.No</th>
-                  <th className="px-6 py-4 text-left font-semibold">College Name</th>
-                  <th className="px-6 py-4 text-left font-semibold">State</th>
-                  <th className="px-6 py-4 text-left font-semibold">Band</th>
-                  <th className="px-6 py-4 text-left font-semibold">Website</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredData.length > 0 ? (
-                  filteredData.map((college, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
-                      <td className="px-6 py-4">
-                        <span className="font-semibold text-slate-800">{index + 1}</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-slate-800">{college.name}</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-slate-600">{college.state}</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`text-lg ${getBandStyle(college.band)}`}>
-                          {college.band}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <a
-                          href={college.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-teal-600 hover:text-teal-700 font-medium"
-                        >
-                          Visit
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
-                      </td>
+            {/* Leaderboard Table */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-teal-600 text-white">
+                    <tr>
+                      <th className="px-6 py-4 text-left font-semibold">S.No</th>
+                      <th className="px-6 py-4 text-left font-semibold">College Name</th>
+                      <th className="px-6 py-4 text-left font-semibold">State</th>
+                      <th className="px-6 py-4 text-left font-semibold">Band</th>
+                      <th className="px-6 py-4 text-left font-semibold">Website</th>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="5" className="px-6 py-12 text-center">
-                      <div className="flex flex-col items-center gap-2">
-                        <Search className="w-12 h-12 text-gray-300" />
-                        <p className="text-lg font-medium text-slate-700">No colleges found</p>
-                        <p className="text-sm text-slate-500">Try adjusting your filters or search query</p>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {filteredData.length > 0 ? (
+                      filteredData.map((college, index) => (
+                        <tr key={index} className="hover:bg-gray-50">
+                          <td className="px-6 py-4">
+                            <span className="font-semibold text-slate-800">{index + 1}</span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="font-medium text-slate-800">{college.name}</span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="text-slate-600">{college.state}</span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`text-lg ${getBandStyle(college.band)}`}>
+                              {college.band}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <a
+                              href={college.website}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-teal-600 hover:text-teal-700 font-medium"
+                            >
+                              Visit
+                              <ExternalLink className="w-4 h-4" />
+                            </a>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="5" className="px-6 py-12 text-center">
+                          <div className="flex flex-col items-center gap-2">
+                            <Search className="w-12 h-12 text-gray-300" />
+                            <p className="text-lg font-medium text-slate-700">No colleges found</p>
+                            <p className="text-sm text-slate-500">Try adjusting your filters or search query</p>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

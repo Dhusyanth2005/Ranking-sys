@@ -24,7 +24,7 @@ const Footer = () => {
                 <Facebook size={20} />
               </a>
               <a 
-                href="https://twitter.com" 
+                href="https://x.com/founderqae" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center hover:bg-teal-700 transition-colors cursor-pointer"
@@ -32,7 +32,7 @@ const Footer = () => {
                 <Twitter size={20} />
               </a>
               <a 
-                href="https://linkedin.com" 
+                href="https://www.linkedin.com/in/founder-qae-70332238b/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center hover:bg-teal-700 transition-colors cursor-pointer"

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Clock, Send, Building2, Users, HelpCircle, FileText, CheckCircle } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Mail, Phone, MapPin, Clock, Send, Building2, Users, HelpCircle, FileText, CheckCircle, AlertCircle, Loader } from 'lucide-react';
 
 const ContactPage = () => {
+  const formRef = useRef();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,6 +14,8 @@ const ContactPage = () => {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -21,78 +24,99 @@ const ContactPage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    setSubmitted(true);
     
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        organization: '',
-        category: '',
-        subject: '',
-        message: ''
-      });
-    }, 3000);
+    // Validation
+    if (!formData.name || !formData.email || !formData.category || !formData.subject || !formData.message) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    setSending(true);
+    setError(false);
+
+   // EmailJS configuration
+    const serviceId = 'service_u6bdvw9'; // Replace with your EmailJS service ID
+    const templateId = 'template_xobjrz1'; // Replace with your EmailJS template ID
+    const publicKey = 'PD-ixnGHTns3GAt3v'; // Replace with your EmailJS public key
+
+    const templateParams = {
+      to_email: 'sdhusyanth20@gmail.com',
+      from_name: formData.name,
+      from_email: formData.email,
+      phone: formData.phone,
+      organization: formData.organization,
+      category: formData.category,
+      subject: formData.subject,
+      message: formData.message,
+    };
+
+    try {
+      // Import emailjs dynamically
+      const emailjs = (await import('@emailjs/browser')).default;
+      
+      await emailjs.send(
+        serviceId,
+        templateId,
+        templateParams,
+        publicKey
+      );
+
+      setSubmitted(true);
+      setSending(false);
+      
+      setTimeout(() => {
+        setSubmitted(false);
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          organization: '',
+          category: '',
+          subject: '',
+          message: ''
+        });
+      }, 3000);
+    } catch (err) {
+      console.error('EmailJS Error:', err);
+      setError(true);
+      setSending(false);
+      
+      setTimeout(() => {
+        setError(false);
+      }, 5000);
+    }
   };
 
   const contactInfo = [
     {
       icon: <Mail className="w-6 h-6" />,
       title: "Email Us",
-      details: ["info@qae.edu.in", "support@qae.edu.in"],
+      details: ["support@qae.edu.in"],
       color: "teal"
     },
     {
       icon: <Phone className="w-6 h-6" />,
       title: "Call Us",
-      details: ["+91 44 1234 5678", "+91 44 8765 4321"],
+      details: ["+917010608490"],
       color: "teal"
     },
     {
       icon: <MapPin className="w-6 h-6" />,
       title: "Visit Us",
-      details: ["QAE Headquarters", "123, Education Avenue, Chennai, Tamil Nadu 600001, India"],
+      details: ["QAE Headquarters", "Kattabomman street, Ganapathy,Coimbatore, Tamil Nadu 641006, India"],
       color: "teal"
     },
     {
       icon: <Clock className="w-6 h-6" />,
       title: "Office Hours",
-      details: ["Monday - Friday: 9:00 AM - 6:00 PM", "Saturday: 9:00 AM - 1:00 PM", "Sunday: Closed"],
+      details: ["Monday - Friday: 9:00 AM - 6:00 PM", "Sunday: Closed"],
       color: "teal"
     }
   ];
 
-  const inquiryTypes = [
-    {
-      icon: <Building2 className="w-8 h-8" />,
-      title: "For Institutions",
-      description: "Ranking participation, accreditation, and institutional partnerships",
-      email: "institutions@qae.edu.in"
-    },
-    {
-      icon: <Users className="w-8 h-8" />,
-      title: "For Students & Parents",
-      description: "General inquiries about rankings and college information",
-      email: "students@qae.edu.in"
-    },
-    {
-      icon: <HelpCircle className="w-8 h-8" />,
-      title: "Technical Support",
-      description: "Website issues, data access, and technical assistance",
-      email: "support@qae.edu.in"
-    },
-    {
-      icon: <FileText className="w-8 h-8" />,
-      title: "Media & Press",
-      description: "Press releases, media inquiries, and collaboration requests",
-      email: "media@qae.edu.in"
-    }
-  ];
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -129,8 +153,6 @@ const ContactPage = () => {
           ))}
         </div>
 
-    
-
         {/* Contact Form */}
         <section>
           <h2 className="text-2xl font-bold text-slate-800 mb-6">Send Us a Message</h2>
@@ -143,8 +165,22 @@ const ContactPage = () => {
                 <h3 className="text-2xl font-bold text-slate-800 mb-2">Message Sent Successfully!</h3>
                 <p className="text-slate-600">We'll get back to you as soon as possible.</p>
               </div>
+            ) : error ? (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <AlertCircle className="w-10 h-10 text-red-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-800 mb-2">Oops! Something went wrong</h3>
+                <p className="text-slate-600 mb-4">We couldn't send your message. Please try again.</p>
+                <button
+                  onClick={() => setError(false)}
+                  className="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-6 py-2 rounded-lg transition-colors"
+                >
+                  Try Again
+                </button>
+              </div>
             ) : (
-              <div>
+              <div ref={formRef}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   {/* Name */}
                   <div>
@@ -262,15 +298,26 @@ const ContactPage = () => {
                 {/* Submit Button */}
                 <button
                   onClick={handleSubmit}
-                  className="w-full md:w-auto flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors"
+                  disabled={sending}
+                  className="w-full md:w-auto flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Send className="w-5 h-5" />
-                  Send Message
+                  {sending ? (
+                    <>
+                      <Loader className="w-5 h-5 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5" />
+                      Send Message
+                    </>
+                  )}
                 </button>
               </div>
             )}
           </div>
         </section>
+
         {/* Additional Info */}
         <div className="mt-12 bg-teal-50 rounded-lg border border-teal-200 p-6">
           <h3 className="font-semibold text-slate-800 mb-3">Response Time</h3>
